@@ -7,9 +7,11 @@ import $ from 'jquery'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min'
 import MarkDown from 'vue-meditor'
+import VueWechatTitle from 'vue-wechat-title'
+
 
 Vue.config.productionTip = false
-
+Vue.use(VueWechatTitle)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

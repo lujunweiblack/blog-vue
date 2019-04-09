@@ -19,7 +19,8 @@
     "vue": "^2.5.2",
     "vue-markdown": "^2.2.4",
     "vue-meditor": "^0.9.3",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue-wechat-title": "^2.0.5"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

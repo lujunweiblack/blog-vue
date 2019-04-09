@@ -5,7 +5,7 @@
         <h1 class="h1_c">XXXXXX</h1>
       </div>
     </div>
-    <router-view/>
+    <router-view v-wechat-title="$route.meta.title"></router-view>
   </div>
 </template>
 

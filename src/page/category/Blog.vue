@@ -39,9 +39,9 @@ export default {
       this.$router.push({
         name: category,
         query: {
-          titleName: '第一部分'
+          titleName: '第一部分规则是不太清出的办法-解决思路'
         }
-      })
+      });
     }
   }
 };

@@ -15,22 +15,32 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: Home,
+      meta: {
+        title: "首页-傻不拉几的二哈"
+    }
     },
     {
       path: '/Life',
       name: 'Life',
-      component: Life
+      component: Life,
+      meta: {
+        title: "生活-傻不拉几的二哈"
+      }
     },
     {
       path: '/Blog',
       name: 'Blog',
-      component: Blog
+      component: Blog,
+      meta: {
+        title: "文章-傻不拉几的二哈"
+      }
     },
     {
       path: '/Info',
       name: 'Info',
-      component: Info
+      component: Info,
+
     },
     {
       path: '/HelloWorld',
