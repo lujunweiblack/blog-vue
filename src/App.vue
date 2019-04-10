@@ -13,7 +13,7 @@
               {{ $route.meta.authorName }}
               <a href="/"></a>
             </li>
-            <li class="timer">{{ $route.meta.publishDate }}</li>
+            <li class="timer">{{ $route.meta.publishDate | formatDate }}</li>
             <li class="view">{{ $route.meta.articleBrowseCount }}已阅读</li>
             <li class="like">{{ $route.meta.articleLikeCount }}</li>
           </ul>
@@ -25,8 +25,20 @@
 </template>
 
 <script>
+import {formatDate} from '@/common/date.js' //在组件中引用date.js
+
 export default {
-  name: "App"
+  name: "App",
+  filters: {
+       formatDate(time) {
+            var date = new Date(time);
+            return formatDate(date, 'yyyy-MM-dd hh:mm');   //年月日 格式自己定义   'yyyy : MM : dd'  例 2018年12月5日的格式
+       },
+       formatDateTwo(time) {
+            var date = new Date(time);
+            return formatDate(date, 'hh:mm:ss');   //时间点 例 21点12分12秒的格式
+        }
+    }
 };
 </script>
 
@@ -64,10 +76,10 @@ export default {
   overflow: hidden;
   margin-top: 20px;
   padding: 20px;
-  /* padding-left: 572px; */
+  padding-left: 650px;
 }
 .bloginfo ul li {
-  float: left;
+  /* float: left; */
   font-size: 12px;
   padding: 0 0 0 20px;
   margin: 0 15px 0 0;

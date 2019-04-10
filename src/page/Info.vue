@@ -25,7 +25,8 @@ export default {
       async: false
     }).responseText;
     this.defaultData = "preview";
-  }
+  },
+   
 };
 </script>
 

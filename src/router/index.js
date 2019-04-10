@@ -11,6 +11,7 @@ import 'mavon-editor/dist/css/index.css'
 Vue.use(Router)
 Vue.use(mavonEditor)
 export default new Router({
+  base: '/dist/',  //添加的地方
   routes: [
     {
       path: '/',
