@@ -13,6 +13,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "mavon-editor": "^2.7.3",
     "popper.js": "^1.15.0",
     "text-loader": "^0.0.1",

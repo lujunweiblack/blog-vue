@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: "Life",
+  name: "Article",
   data() {
     return {
       articles: []
@@ -32,11 +32,17 @@ export default {
       this.$route.meta.titleName = article.articleTitleName;
       this.$route.meta.authorName = article.authorName;
       this.$route.meta.publishDate = article.publishDate;
-      this.$route.meta.browseNum = article.browseNum;
-      this.$route.meta.likeNum = article.likeNum;
+      this.$route.meta.articleBrowseCount = article.articleBrowseCount;
+      this.$route.meta.articleLikeCount = article.articleLikeCount;
     }
   },
   mounted: function() {
+
+  this.$fetch('/portal/article?articleType=1')
+      .then((response) => {
+        console.log(response)
+      })
+
     this.articles = [
       {
         articleId: 20000908,
@@ -45,8 +51,8 @@ export default {
         articleIntroduction:
           "如图，要实现上图效果，我采用如下方法：1、首先在数据库模型，增加字段，分别是图片2，图片3。2、增加标签模板，用if，else if 来判断，输出。思路已打开，样式调用就可以多样化啦！",
         authorName: "陆军委",
-        browseNum: "1530",
-        likeNum: "885"
+        articleBrowseCount: "1530",
+        articleLikeCount: "885"
       },
       {
         articleId: 20000909,
@@ -54,8 +60,8 @@ export default {
         publishDate: "2019-03-31 09:13:56",
         articleIntroduction: "网页中图片属性固定宽度，如何用js改变大小！",
         authorName: "陆军委",
-        browseNum: "1530",
-        likeNum: "885"
+         articleBrowseCount: "1530",
+        articleLikeCount: "885"
       },
       {
         articleId: 20000912,
@@ -63,8 +69,8 @@ export default {
         publishDate: "2019-03-31 09:13:56",
         articleIntroduction: "git常用指令简介,最流行,最便捷的版本管理工具!",
         authorName: "陆军委",
-        browseNum: "1530",
-        likeNum: "885"
+         articleBrowseCount: "1530",
+        articleLikeCount: "885"
       }
     ];
   }

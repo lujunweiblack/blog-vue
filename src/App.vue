@@ -14,8 +14,8 @@
               <a href="/"></a>
             </li>
             <li class="timer">{{ $route.meta.publishDate }}</li>
-            <li class="view">{{ $route.meta.browseNum }}已阅读</li>
-            <li class="like">{{ $route.meta.likeNum }}</li>
+            <li class="view">{{ $route.meta.articleBrowseCount }}已阅读</li>
+            <li class="like">{{ $route.meta.articleLikeCount }}</li>
           </ul>
         </div>
       </div>

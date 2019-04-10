@@ -6,7 +6,13 @@ import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min'
 import VueWechatTitle from 'vue-wechat-title'
-
+import axios from 'axios'
+import {post,fetch,patch,put} from './common/http'
+//定义全局变量
+Vue.prototype.$post=post;
+Vue.prototype.$fetch=fetch;
+Vue.prototype.$patch=patch;
+Vue.prototype.$put=put;
 
 Vue.config.productionTip = false
 Vue.use(VueWechatTitle)
