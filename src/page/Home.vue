@@ -1,52 +1,52 @@
 <template>
   <div class="container">
     <div class="text-center">
-      <div>
-        <a href="javascript:void(0)" @click="jumpCategory('Life')">
-          <h3>第一部分</h3>
-          <p>第一部分的相信内容点进去可查看第一部分的详细文章</p>
+      <div class="item_c" v-for="(val,key) in categorys">
+        <a href="javascript:void(0)" @click="jumpCategory(val.categoryCode)">
+          <h3>{{ val.categoryName }}</h3>
+          <p>{{ val.categoryDes }}</p>
         </a>
+        <hr>
       </div>
-      <hr>
-      <div>
-        <a href="javascript:void(0)" @click="jumpCategory('Blog')">
-          <h3>第二部分</h3>
-          <p>第二部分的相信内容点进去可查看第一部分的详细文章</p>
-        </a>
-      </div>
-      <hr>
-      <div>
-        <a href="javascript:void(0)" @click="jumpCategory('HelloWorld')">
-          <h3>第三部分</h3>
-          <p>第三部分的相信内容点进去可查看第一部分的详细文章</p>
-        </a>
-      </div>
-      <hr>
     </div>
   </div>
 </template>
 <script>
-// $(function() {
-//   $("#h1_id").click(function() {
-//     alert(1);
-//   });
-// });
 export default {
   name: "Home",
   data() {
     return {
-      blogName: "XXXXXX"
+      categorys: []
     };
   },
-   methods:{
-    jumpCategory(category) {
+  methods: {
+    jumpCategory(categoryCode) {
       this.$router.push({
-        name: category,
-        params: {
-          category: category
-        }
-      })
+        name: categoryCode,
+      });
     }
+  },
+  mounted: function() {
+    this.categorys = [
+      {
+        categoryName: "生  活",
+        categoryCode: "Life",
+        categoryDes:
+          "生活像一团麻，总有那解不开的小疙瘩呀，生活像一杯酒啊，尝遍了人生酸甜苦辣的苦乐年华。"
+      },
+      {
+        categoryName: "文  章",
+        categoryCode: "Article",
+        categoryDes:
+          "自己不会的题目，去看了别人的一会儿就会忘记，但如果是自己思考出来的，就会记得很牢。多学习，多深入，多总结。"
+      },
+      {
+        categoryName: "VUE",
+        categoryCode: "HelloWorld",
+        categoryDes:
+          "一套用于构建用户界面的渐进式框架。与其它大型框架不同的是，Vue 被设计为可以自底向上逐层应用。"
+      }
+    ];
   }
 };
 </script>

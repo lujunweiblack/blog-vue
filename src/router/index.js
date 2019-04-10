@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Home from '@/page/Home'
 import Life from '@/page/category/Life'
-import Blog from '@/page/category/Blog'
+import Article from '@/page/category/Article'
 import Info from '@/page/Info'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
@@ -17,7 +17,7 @@ export default new Router({
       name: 'Home',
       component: Home,
       meta: {
-        title: "首页-傻不拉几的二哈"
+        title: "傻不拉几的二哈"
     }
     },
     {
@@ -25,15 +25,15 @@ export default new Router({
       name: 'Life',
       component: Life,
       meta: {
-        title: "生活-傻不拉几的二哈"
+        title: "生活 - 傻不拉几的二哈"
       }
     },
     {
-      path: '/Blog',
-      name: 'Blog',
-      component: Blog,
+      path: '/Article',
+      name: 'Article',
+      component: Article,
       meta: {
-        title: "文章-傻不拉几的二哈"
+        title: "文章 - 傻不拉几的二哈"
       }
     },
     {
@@ -45,7 +45,10 @@ export default new Router({
     {
       path: '/HelloWorld',
       name: 'HelloWorld',
-      component: HelloWorld
+      component: HelloWorld,
+      meta: {
+        title: "VUE - 傻不拉几的二哈"
+      }
     }
   ]
 })
