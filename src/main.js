@@ -5,9 +5,10 @@ import App from './App'
 import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min'
-import VueWechatTitle from 'vue-wechat-title'
 import axios from 'axios'
 import {post,fetch,patch,put} from './common/http'
+//导入store
+import store from './store'
 //定义全局变量
 Vue.prototype.$post=post;
 Vue.prototype.$fetch=fetch;
@@ -15,11 +16,13 @@ Vue.prototype.$patch=patch;
 Vue.prototype.$put=put;
 
 Vue.config.productionTip = false
-Vue.use(VueWechatTitle)
+Vue.use(require('vue-wechat-title'))
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  //引入store(Vuex框架进行传值)
+  store,
   components: { App },
   template: '<App/>'
 })
