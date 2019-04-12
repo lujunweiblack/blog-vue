@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="jumbotron_2">
-      <h3 class="h3_c" @click="login()" v-text="article.articleTitleName"></h3>
+      <h3 class="h3_c" v-text="article.articleTitleName"></h3>
       <div class="bloginfo">
         <ul class="ul_c">
           <li class="author">
@@ -10,12 +10,20 @@
           </li>
           <li class="timer">{{ article.publishDate | formatDate }}</li>
           <li class="view">{{ article.articleBrowseCount }} 已阅读</li>
+          <!-- 点赞功能先注释 -->
           <!-- <a href="javasctipt:void(0);"><li class="like">{{ article.articleLikeCount }}</li></a> -->
         </ul>
       </div>
     </div>
-    <mavon-editor v-if="this.$store.state.userObj.userName == null" class="mavon_c" v-model="msg" :subfield="false" :toolbarsFlag="false" :defaultOpen="defaultData"/>
-    <mavon-editor v-if="this.$store.state.userObj.userName != null" class="mavon_c" v-model="msg" />
+    <mavon-editor
+      v-if="this.$store.state.openEdit == null ||this.$store.state.openEdit == false"
+      class="mavon_c"
+      v-model="msg"
+      :subfield="false"
+      :toolbarsFlag="false"
+      :defaultOpen="defaultData"
+    />
+    <mavon-editor v-if="this.$store.state.openEdit == true" class="mavon_c" v-model="msg"/>
     <div v-wechat-title="article.articleTitleName"></div>
   </div>
 </template>
@@ -44,17 +52,7 @@ export default {
   components: {
     VueMarkdown
   },
-  methods: {
-    login() {
-      if(this.$store.state.userObj.userName == null){
-       this.$store.dispatch("fillUserObj", {userName:'陆军委'});
-       alert('登陆成功')
-      }else{
-        this.$store.dispatch("fillUserObj", {userName:null});
-       alert('退出登录')
-      }
-    }
-  },
+  methods: {},
   beforeMount: function() {
     this.article = this.$store.state.article;
     console.log(this.article);
@@ -79,7 +77,7 @@ a:visited {
   text-decoration: none;
 }
 a:hover {
-  color:brown;
+  color: brown;
   text-decoration: none;
 }
 .h3_c {
@@ -107,7 +105,7 @@ a:hover {
   padding: 20px;
 }
 .ul_c {
-    padding: 0px;
+  padding: 0px;
 }
 .bloginfo ul li {
   font-size: 12px;
@@ -139,6 +137,6 @@ a:hover {
   background: url(../../static/images/auicon.jpg) no-repeat top -86.3px left;
 }
 .mavon_c {
-  margin-bottom: 5%
+  margin-bottom: 5%;
 }
 </style>
