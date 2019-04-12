@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="jumbotron_2">
-      <h3 class="h3_c" v-text="article.articleTitleName"></h3>
+      <h3 class="h3_c" @click="login()" v-text="article.articleTitleName"></h3>
       <div class="bloginfo">
         <ul class="ul_c">
           <li class="author">
@@ -10,11 +10,12 @@
           </li>
           <li class="timer">{{ article.publishDate | formatDate }}</li>
           <li class="view">{{ article.articleBrowseCount }} 已阅读</li>
-          <a href="javasctipt:void(0);"><li class="like">{{ article.articleLikeCount }}</li></a>
+          <!-- <a href="javasctipt:void(0);"><li class="like">{{ article.articleLikeCount }}</li></a> -->
         </ul>
       </div>
     </div>
-    <mavon-editor class="mavon_c" v-model="msg" :subfield="false" :toolbarsFlag="false" :defaultOpen="defaultData"/>
+    <mavon-editor v-if="this.$store.state.userObj.userName == null" class="mavon_c" v-model="msg" :subfield="false" :toolbarsFlag="false" :defaultOpen="defaultData"/>
+    <mavon-editor v-if="this.$store.state.userObj.userName != null" class="mavon_c" v-model="msg" />
     <div v-wechat-title="article.articleTitleName"></div>
   </div>
 </template>
@@ -44,7 +45,15 @@ export default {
     VueMarkdown
   },
   methods: {
-    loadInfoData() {}
+    login() {
+      if(this.$store.state.userObj.userName == null){
+       this.$store.dispatch("fillUserObj", {userName:'陆军委'});
+       alert('登陆成功')
+      }else{
+        this.$store.dispatch("fillUserObj", {userName:null});
+       alert('退出登录')
+      }
+    }
   },
   beforeMount: function() {
     this.article = this.$store.state.article;

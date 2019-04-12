@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         articles: [],
-        article:{}
+        article:{},
+        userObj:{}
     },
     actions: {
         fillArticles (ctx,articles) {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
         },
         fillArticle (ctx,article) {
             ctx.commit('fillArticle',article)
+        },
+        fillUserObj (ctx,userObj) {
+            ctx.commit('fillUserObj',userObj)
         }
     },
     mutations: {
@@ -22,6 +26,9 @@ export default new Vuex.Store({
         },
         fillArticle (state,article) {
             state.article = article
+        },
+        fillUserObj (state,userObj) {
+            state.userObj = userObj
         }
     }
 })
