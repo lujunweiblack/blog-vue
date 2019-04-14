@@ -58,7 +58,7 @@ export default {
     console.log(this.article);
     var articleId = this.article.articleId;
     this.msg = $.ajax({
-      url: "http://article.lujunwei.com/md/" + articleId + ".md", //注意:这里路径要取全
+      url: "http://article.lujunwei.com/md/" + articleId + ".md?attname=", //注意:这里路径要取全
       async: false
     }).responseText;
     this.defaultData = "preview";

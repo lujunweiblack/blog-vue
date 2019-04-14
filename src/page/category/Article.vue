@@ -1,9 +1,19 @@
 <template>
   <div class="container">
+    <!-- 操作按钮 -->
+    <div v-if="this.$store.state.userObj!=null" class="operation_c">
+      <a class="operation_c" href="JavaScript: void(0);"><span class="span_add_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>新增</a>
+      <a class="operation_c" href="JavaScript: void(0);"><span class="span_edit_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>修改</a>
+      <a class="operation_c" href="JavaScript: void(0);"><span class="span_offline_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>下线</a>
+      <a class="operation_c" href="JavaScript: void(0);"><span class="span_del_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>删除</a>
+      <hr>
+    </div>
     <div class="item" v-for="(val,index) in articles">
+      <div> <input  type="checkbox" /></div>
+      
       <a href="javascript:void(0)" @click="jumpCategory(val.articleId,index)">
         <h4>{{ val.articleTitleName }}</h4>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;{{ val.articleIntroduction }}</p>
+        <p>&nbsp;{{ val.articleIntroduction }}</p>
       </a>
       <hr>
     </div>
@@ -36,11 +46,57 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.operation_c {
+  margin-bottom: 4%
+}
+.span_add_c{
+  margin-right: 1%;
+  background-image: url(../../../static/images/add.png);
+  background-size: cover;
+}
+.span_add_c:hover{
+  margin-right: 1%;
+  background-image: url(../../../static/images/add1.png);
+  background-size: cover;
+}
+.span_edit_c{
+  margin-right: 1%;
+  background-image: url(../../../static/images/edit.png);
+  background-size: cover;
+}
+.span_edit_c:hover{
+  margin-right: 1%;
+  background-image: url(../../../static/images/edit1.png);
+  background-size: cover;
+}
+.span_offline_c{
+  margin-right: 1%;
+  background-image: url(../../../static/images/offline.png);
+  background-size: cover;
+}
+.span_offline_c:hover{
+  margin-right: 1%;
+  background-image: url(../../../static/images/offline1.png);
+  background-size: cover;
+}
+.span_del_c{
+  margin-right: 1%;
+  background-image: url(../../../static/images/del.png);
+  background-size: cover;
+}
+.span_del_c:hover{
+  margin-right: 1%;
+  background-image: url(../../../static/images/del1.png);
+  background-size: cover;
+}
 h4 {
-  margin-top: 6%;
+  margin-top: 2%;
 }
 p {
-  margin-top: 2%;
+  margin-top: 1%;
+}
+.operation_c{
+  margin-right: 2%
 }
 a:link {
   color: #2c3e50;
@@ -53,5 +109,10 @@ a:visited {
 a:hover {
   color: #727880;
   text-decoration: none;
+}
+/* 复选框 */
+.check_view_state {
+    cursor: pointer;
+    font-size: 1em;
 }
 </style>
