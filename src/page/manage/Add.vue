@@ -61,7 +61,8 @@ export default {
       this.$post("/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
-        articleState: "0"
+        articleState: "0",
+        backupField01:this.editorValue,
       }).then(response => {
         console.log(response);
       });
@@ -70,7 +71,8 @@ export default {
       this.$post("/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
-        articleState: "0"
+        articleState: "0",
+        backupField01:this.editorValue,
       }).then(response => {
         console.log(response);
       });
@@ -79,7 +81,8 @@ export default {
       this.$post("/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
-        articleState: "1"
+        articleState: "1",
+        backupField01:this.editorValue,
       }).then(response => {
         console.log(response);
       });
