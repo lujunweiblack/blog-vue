@@ -199,7 +199,6 @@ export default {
 .user_d_c {
 }
 .user_c {
-   background-color: #919294;
   padding-top: 2%;
   text-align: center;
 }

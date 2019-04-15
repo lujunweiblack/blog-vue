@@ -12,6 +12,7 @@ const Home = () => import('@/page/Home')
 const Life = () => import('@/page/category/Life')
 const Article = () => import('@/page/category/Article')
 const Info = () => import('@/page/Info')
+const Add = () => import('@/page/manage/Add')
 
 Vue.use(Router)
 Vue.use(mavonEditor)
@@ -24,7 +25,7 @@ export default new Router({
       component: Home,
       meta: {
         title: "傻不拉几的二哈"
-    }
+      }
     },
     {
       path: '/Life',
@@ -55,6 +56,19 @@ export default new Router({
       meta: {
         title: "VUE"
       }
-    }
+    },
+    {
+      path: '/HelloWorld',
+      name: 'HelloWorld',
+      component: HelloWorld,
+      meta: {
+        title: "VUE"
+      }
+    },
+    {
+      path: '/manage/Add',
+      name: 'Add',
+      component: Add,
+    },
   ]
 })
