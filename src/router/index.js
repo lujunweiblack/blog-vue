@@ -13,6 +13,7 @@ const Life = () => import('@/page/category/Life')
 const Article = () => import('@/page/category/Article')
 const Info = () => import('@/page/Info')
 const Add = () => import('@/page/manage/Add')
+const Edit = () => import('@/page/manage/Edit')
 
 Vue.use(Router)
 Vue.use(mavonEditor)
@@ -69,6 +70,11 @@ export default new Router({
       path: '/manage/Add',
       name: 'Add',
       component: Add,
+    },
+    {
+      path: '/manage/Edit',
+      name: 'Edit',
+      component: Edit,
     },
   ]
 })

@@ -58,34 +58,74 @@ export default {
   },
   methods: {
     save() {
+       if(this.check() == null){
+          return;
+      }
       this.$post("/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
         articleState: "0",
-        backupField01:this.editorValue,
+        backupFieldOne: this.editorValue
       }).then(response => {
         console.log(response);
+        if (response.code == "10200") {
+          alert("操作成功");
+        } else {
+          alert("操作失败");
+        }
       });
     },
     complete() {
+       if(this.check() == null){
+          return;
+      }
       this.$post("/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
         articleState: "0",
-        backupField01:this.editorValue,
+        backupFieldOne: this.editorValue
       }).then(response => {
         console.log(response);
+        if (response.code == "10200") {
+          alert("操作成功");
+          this.$router.push({ name: "Article" });
+        } else {
+          alert("操作失败");
+        }
       });
     },
     goOnline() {
+      if(this.check() == null){
+          return;
+      }
       this.$post("/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
         articleState: "1",
-        backupField01:this.editorValue,
+        backupFieldOne: this.editorValue
       }).then(response => {
         console.log(response);
+        if (response.code == "10200") {
+          alert("操作成功");
+          this.$router.push({ name: "Article" });
+        } else {
+          alert("操作失败");
+        }
       });
+    },
+    check() {
+      if (!this.articleTitleName) {
+        alert("标题不能为空");
+        return null;
+      } else if (!this.articleIntroduction) {
+        alert("文章简介不能为空");
+        return null;
+      } else if (!this.editorValue) {
+        alert("文章内容不能为空");
+        return null;
+      }
+
+      return 1;
     }
   },
   beforeMount: function() {}

@@ -2,22 +2,23 @@
   <div class="container">
     <!-- 操作按钮 -->
     <div v-if="this.$store.state.userObj!=null" class="operation_c">
+      <a @click="line()" class="operation_c" href="JavaScript: void(0);">
+        <span class="span_line_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>上下线
+      </a>
       <a @click="add()" class="operation_c" href="JavaScript: void(0);">
         <span class="span_add_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>新增
       </a>
       <a @click="edit()" class="operation_c" href="JavaScript: void(0);">
         <span class="span_edit_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>修改
       </a>
-      <a @click="offLine()" class="operation_c" href="JavaScript: void(0);">
-        <span class="span_offline_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>下线
-      </a>
+
       <a @click="del()" class="operation_c" href="JavaScript: void(0);">
         <span class="span_del_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>删除
       </a>
       <hr>
     </div>
     <div class="item" v-for="(val,index) in articles">
-      <input v-if="store.state.userObj" type="checkbox" v-text="val.articleId">
+      <input v-if="store.state.userObj" type="checkbox" v-text="val">
       <a href="javascript:void(0)" @click="jumpCategory(val.articleId,index)">
         <h4>{{ val.articleTitleName }}</h4>
         <p>&nbsp;{{ val.articleIntroduction }}</p>
@@ -44,49 +45,78 @@ export default {
     },
     //
     add() {
-       this.$router.push({ name: "Add" });
+      this.$router.push({ name: "Add" });
     },
     edit() {
-     var articleIds = this.buttonCheck();
-     if(articleIds.length==0 || articleIds.length>1){
-       alert("请勾选一条数据");
-     }else{
-        console.log(articleIds)
-     }
-     
+      var articles = this.buttonCheck();
+      if (articles.length == 0 || articles.length > 1) {
+        alert("请勾选一条数据");
+      } else {
+        this.$store.dispatch("fillArticle", articles[0]);
+        this.$router.push({ name: "Edit" });
+      }
     },
-    offLine() {
-     var articleIds = this.buttonCheck();
-     if(articleIds.length==0 ){
-       alert("请勾选一条数据");
-     }else{
-        console.log(articleIds)
-     }
+    line() {
+      var articles = this.buttonCheck();
+      if (articles.length == 0) {
+        alert("请勾选一条数据");
+      } else {
+        articles.forEach(article => {
+          this.$post("/manage/article/upAndDown", {
+            articleId: article.articleId,
+            articleState: article.articleState
+          }).then(response => {
+            console.log(response);
+            if (response.code == "10200") {
+              alert("操作成功");
+              this.onReadData();
+            } else {
+              alert("操作失败");
+            }
+          });
+        });
+      }
     },
     del() {
-     var articleIds = this.buttonCheck();
-     if(articleIds.length==0 ){
-       alert("请勾选一条数据");
-     }else{
-        console.log(articleIds)
-     }
+      var articles = this.buttonCheck();
+      if (articles.length == 0) {
+        alert("请勾选一条数据");
+      } else {
+        articles.forEach(article => {
+          this.$post("/manage/article/markDel", {
+            articleId: article.articleId
+          }).then(response => {
+            console.log(response);
+            if (response.code == "10200") {
+              alert("操作成功");
+            } else {
+              alert("操作失败");
+            }
+          });
+        });
+      }
     },
     buttonCheck() {
       var checkObj = $("input[type='checkbox']");
       var value = new Array();
       for (var i = 0; i < checkObj.length; i++) {
         if (checkObj[i].checked) {
-          value.push($(checkObj[i]).text());
+          value.push(JSON.parse($(checkObj[i]).text()));
         }
       }
       return value;
+    },
+    onReadData() {
+      this.$fetch("/portal/article?articleType=1&articleState=1").then(
+        response => {
+          this.$store.dispatch("fillArticles", response.result);
+          this.articles = response.result;
+        }
+      );
     }
   },
   mounted: function() {
-    this.$fetch("/portal/article?articleType=1").then(response => {
-      this.$store.dispatch("fillArticles", response.result);
-      this.articles = response.result;
-    });
+    this.onReadData();
   }
 };
 </script>
@@ -116,7 +146,18 @@ export default {
   background-image: url(../../../static/images/edit1.png);
   background-size: cover;
 }
-.span_offline_c {
+
+.span_line_c {
+  margin-right: 1%;
+  background-image: url(../../../static/images/line.png);
+  background-size: cover;
+}
+.span_line_c:hover {
+  margin-right: 1%;
+  background-image: url(../../../static/images/line1.png);
+  background-size: cover;
+}
+/* .span_offline_c {
   margin-right: 1%;
   background-image: url(../../../static/images/offline.png);
   background-size: cover;
@@ -125,7 +166,7 @@ export default {
   margin-right: 1%;
   background-image: url(../../../static/images/offline1.png);
   background-size: cover;
-}
+} */
 .span_del_c {
   margin-right: 1%;
   background-image: url(../../../static/images/del.png);

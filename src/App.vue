@@ -103,14 +103,19 @@ export default {
         return;
       }
       //测试使用
-      if (this.userName != "陆军委") {
-        alert("未注册的用户");
+      // if (this.userName != "lujunwei") {
+      //   alert("未注册的用户");
+      //   return;
+      // }
+
+      if (this.userName == "lujunwei" && this.passWord == "123123") {
+      } else {
+        alert("用户名或密码错误");
         return;
       }
 
-       if (this.userName!='陆军委' || this.passWord!='123123') {
-        alert("请输入用户名或密码错误");
-        return;
+      if (this.userName == "lujunwei") {
+        alert("你好管理员");
       }
 
       var userObj = {
@@ -226,7 +231,6 @@ export default {
   background-color: #737475;
   border-color: #737475;
 }
-
 
 .input-group-lg > .form-control,
 .input-group-lg > .input-group-addon,
