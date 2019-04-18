@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <!-- 操作按钮 -->
-    <div v-if="this.$store.state.userObj!=null" class="operation_c">
+    <div
+      v-if="this.$store.state.userObj!=null && this.$store.state.userObj.sysRoles[0].code=='ROLE_SYS_ADMIN'"
+      class="operation_c"
+    >
       <a @click="line()" class="operation_c" href="JavaScript: void(0);">
         <span class="span_line_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>上下线
       </a>
@@ -15,10 +18,21 @@
       <a @click="del()" class="operation_c" href="JavaScript: void(0);">
         <span class="span_del_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>删除
       </a>
+      <span class="span_running_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>已上线
+      <span class="span_default_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>已下线
+      <span class="span_stop_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>已删除(标记)
       <hr>
     </div>
     <div class="item" v-for="(val,index) in articles">
-      <input v-if="store.state.userObj" type="checkbox" v-text="val">
+      <div
+        class="item_d_c"
+        v-if="store.state.userObj!=null && store.state.userObj.sysRoles[0].code=='ROLE_SYS_ADMIN'"
+      >
+        <input type="checkbox" v-text="val">
+        <span v-if="val.articleState==0" class="span_default_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span v-if="val.articleState==1" class="span_running_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span v-if="val.articleState==2" class="span_stop_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </div>
       <a href="javascript:void(0)" @click="jumpCategory(val.articleId,index)">
         <h4>{{ val.articleTitleName }}</h4>
         <p>&nbsp;{{ val.articleIntroduction }}</p>
@@ -34,8 +48,13 @@ export default {
   data() {
     return {
       articles: [],
-      store: this.$store
+      store: this.$store,
     };
+  },
+  computed:{
+      userObj(){
+      return this.$store.state.userObj;
+      }
   },
   methods: {
     jumpCategory(articleId, index) {
@@ -62,14 +81,14 @@ export default {
         alert("请勾选一条数据");
       } else {
         articles.forEach(article => {
-          this.$post("/manage/article/upAndDown", {
+          this.$post("http://lujunwei.com:9003/manage/article/upAndDown", {
             articleId: article.articleId,
             articleState: article.articleState
           }).then(response => {
             console.log(response);
             if (response.code == "10200") {
-              alert("操作成功");
               this.onReadData();
+              alert("操作成功");
             } else {
               alert("操作失败");
             }
@@ -83,11 +102,12 @@ export default {
         alert("请勾选一条数据");
       } else {
         articles.forEach(article => {
-          this.$post("/manage/article/markDel", {
+          this.$post("http://lujunwei.com:9003/manage/article/markDel", {
             articleId: article.articleId
           }).then(response => {
             console.log(response);
             if (response.code == "10200") {
+              this.onReadData();
               alert("操作成功");
             } else {
               alert("操作失败");
@@ -107,16 +127,23 @@ export default {
       return value;
     },
     onReadData() {
-      this.$fetch("/portal/article?articleType=1&articleState=1").then(
-        response => {
-          this.$store.dispatch("fillArticles", response.result);
-          this.articles = response.result;
-        }
-      );
+      var userParam = "&articleState=1";
+      if(this.$store.state.userObj!=null && this.$store.state.userObj.sysRoles[0].code=='ROLE_SYS_ADMIN'){
+          userParam=""
+      }
+      this.$fetch("http://lujunwei.com:9000/portal/article?articleType=1"+userParam).then(response => {
+        this.$store.dispatch("fillArticles", response.result);
+        this.articles = response.result;
+      });
     }
   },
   mounted: function() {
     this.onReadData();
+  },
+   watch:{
+    userObj:function(newStore,oldStore){
+     this.onReadData();
+    }
   }
 };
 </script>
@@ -124,7 +151,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .operation_c {
-  margin-bottom: 4%；;
+  margin-bottom: 4%;
 }
 .span_add_c {
   margin-right: 1%;
@@ -177,6 +204,23 @@ export default {
   background-image: url(../../../static/images/del1.png);
   background-size: cover;
 }
+.span_default_c {
+  margin-left: 1%;
+  background-image: url(../../../static/images/article_default.png);
+  background-size: cover;
+}
+.span_running_c {
+  margin-left: 1%;
+  background-image: url(../../../static/images/article_running.png);
+  background-size: cover;
+}
+.span_stop_c {
+  margin-left: 1%;
+  background-image: url(../../../static/images/article_stop.png);
+  background-size: cover;
+}
+.item_d_c {
+}
 h4 {
   margin-top: 2%;
 }
@@ -185,6 +229,9 @@ p {
 }
 .operation_c {
   margin-right: 2%;
+}
+.operation_c_c {
+  margin-right: 1%;
 }
 a:link {
   color: #2c3e50;

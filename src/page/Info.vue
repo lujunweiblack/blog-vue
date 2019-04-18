@@ -8,7 +8,8 @@
             {{ article.authorName }}
             <a href="/"></a>
           </li>
-          <li class="timer">{{ article.publishDate | formatDate }}</li>
+          <li v-if="article.publishDate!=null" class="timer">{{ article.publishDate | formatDate }}</li>
+          <li v-if="article.publishDate==null" class="timer">未上线</li>
           <li class="view">{{ article.articleBrowseCount }} 已阅读</li>
           <!-- 点赞功能先注释 -->
           <!-- <a href="javasctipt:void(0);"><li class="like">{{ article.articleLikeCount }}</li></a> -->

@@ -16,8 +16,9 @@
                 <span class="password">&nbsp;&nbsp;&nbsp;&nbsp;</span>
               </span>
               <input type="password" v-model="passWord" class="form-control" placeholder="password">
-              <button type="button" @click="login()" class="btn btn-default btn-sm btn_c">登 陆</button>
-              <button type="button" @click="toRegister()" class="btn btn-default btn-sm btn_c_1">注 册</button>
+              <button type="button" @click="login()" class="btn btn-primary btn-sm btn_c">登 陆</button>
+              <button type="button" @click="reset()" class="btn btn-primary btn-sm btn_c_1">重 置</button>
+              <!-- <button type="button" @click="toRegister()" class="btn btn-default btn-sm btn_c_1">注 册</button> -->
             </div>
           </form>
         </div>
@@ -50,7 +51,7 @@
           <span class="username">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;
           <span class="user_n_c">{{ this.$store.state.userObj.userName }}</span>&nbsp;&nbsp;
           <span class="email">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;
-          <span class="user_n_c">{{ this.email }}</span>
+          <span class="user_n_c">{{ this.$store.state.userObj.email }}</span>
           <a @click="logout()" href="javascript: void(0);">
             <span class="logout">&nbsp;&nbsp;&nbsp;&nbsp;</span>
           </a>
@@ -73,7 +74,6 @@ export default {
       userName: "",
       passWord: "",
       confirmPassword: "",
-      email: "lujunwei_black@163.com",
       userObj: {}
     };
   },
@@ -102,28 +102,20 @@ export default {
         alert("请输入用户名或密码!");
         return;
       }
-      //测试使用
-      // if (this.userName != "lujunwei") {
-      //   alert("未注册的用户");
-      //   return;
-      // }
 
-      if (this.userName == "lujunwei" && this.passWord == "123123") {
-      } else {
-        alert("用户名或密码错误");
-        return;
-      }
-
-      if (this.userName == "lujunwei") {
-        alert("你好管理员");
-      }
-
-      var userObj = {
+      this.$post("http://lujunwei.com:9003/manage/user/login", {
         userName: this.userName,
         passWord: this.passWord
-      };
-      this.$store.dispatch("fillUserObj", userObj);
-      localStorage.setItem("userObj", JSON.stringify(userObj));
+      }).then(response => {
+        console.log(response);
+        if (response.code == "10200") {
+          alert(response.msg)
+          this.$store.dispatch("fillUserObj", response.result);
+          localStorage.setItem("userObj", JSON.stringify(response.result));
+        } else {
+          alert(response.msg)
+        }
+      });
     },
     logout() {
       this.userName = null;
@@ -166,6 +158,10 @@ export default {
       this.email = null;
       this.confirmPassword = null;
       this.$store.dispatch("changeIsOpen", true);
+    },
+    reset(){
+      this.userName = null;
+      this.passWord = null;
     }
   }
 };

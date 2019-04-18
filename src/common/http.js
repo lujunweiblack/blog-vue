@@ -51,7 +51,7 @@ axios.defaults.baseURL ='http://127.0.0.1:9000';
 
 export function fetch(url,params={}){
   return new Promise((resolve,reject) => {
-    axios.get(axios.defaults.baseURL+url,{
+    axios.get(url,{
       params:params
     })
     .then(response => {

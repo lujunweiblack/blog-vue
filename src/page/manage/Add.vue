@@ -2,9 +2,9 @@
   <div class="container">
     <div class="title_d_c">
       <div class="title_d_b_c">
-        <button type="button" @click="save()" class="btn btn-default btn-sm btn_c">保存</button>
-        <button type="button" @click="complete()" class="btn btn-default btn-sm btn_c">完成</button>
-        <button type="button" @click="goOnline()" class="btn btn-default btn-sm btn_c">完成&发布</button>
+        <!-- <button type="button" @click="save()" class="btn btn-default btn-sm btn_c">保存</button> -->
+        <button type="button" @click="complete()" class="btn btn-primary btn-sm btn_c">完成</button>
+        <button type="button" @click="goOnline()" class="btn btn-primary btn-sm btn_c">完成&发布</button>
       </div>
       <div class="title_d_d_c">
         <!-- <span class="title_s_c">文章标题：</span> -->
@@ -61,7 +61,7 @@ export default {
        if(this.check() == null){
           return;
       }
-      this.$post("/manage/add/save", {
+      this.$post("http://lujunwei.com:9003/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
         articleState: "0",
@@ -79,7 +79,7 @@ export default {
        if(this.check() == null){
           return;
       }
-      this.$post("/manage/add/save", {
+      this.$post("http://lujunwei.com:9003/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
         articleState: "0",
@@ -98,7 +98,7 @@ export default {
       if(this.check() == null){
           return;
       }
-      this.$post("/manage/add/save", {
+      this.$post("http://lujunwei.com:9003/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
         articleState: "1",
