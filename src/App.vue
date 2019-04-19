@@ -103,7 +103,7 @@ export default {
         return;
       }
 
-      this.$post("http://lujunwei.com:9003/manage/user/login", {
+      this.$post("/BLOG-MANAGE/manage/user/login", {
         userName: this.userName,
         passWord: this.passWord
       }).then(response => {
