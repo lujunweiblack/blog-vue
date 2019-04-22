@@ -81,7 +81,7 @@ export default {
         alert("请勾选一条数据");
       } else {
         articles.forEach(article => {
-          this.$post("/BLOG-MANAGE/manage/article/upAndDown", {
+          this.$post("/manage/article/upAndDown", {
             articleId: article.articleId,
             articleState: article.articleState
           }).then(response => {
@@ -102,7 +102,7 @@ export default {
         alert("请勾选一条数据");
       } else {
         articles.forEach(article => {
-          this.$post("/BLOG-MANAGE/manage/article/markDel", {
+          this.$post("/manage/article/markDel", {
             articleId: article.articleId
           }).then(response => {
             console.log(response);
@@ -131,7 +131,7 @@ export default {
       if(this.$store.state.userObj!=null && this.$store.state.userObj.sysRoles[0].code=='ROLE_SYS_ADMIN'){
           userParam=""
       }
-      this.$fetch("/BLOG-PORTAL/portal/article?articleType=1"+userParam).then(response => {
+      this.$fetch("/portal/article?articleType=1"+userParam).then(response => {
         this.$store.dispatch("fillArticles", response.result);
         this.articles = response.result;
       });

@@ -61,7 +61,7 @@ export default {
        if(this.check() == null){
           return;
       }
-      this.$post("/BLOG-MANAGE/manage/add/save", {
+      this.$post("/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
         articleState: "0",
@@ -79,7 +79,7 @@ export default {
        if(this.check() == null){
           return;
       }
-      this.$post("/BLOG-MANAGE/manage/add/save", {
+      this.$post("/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
         articleState: "0",
@@ -98,7 +98,7 @@ export default {
       if(this.check() == null){
           return;
       }
-      this.$post("/BLOG-MANAGE/manage/add/save", {
+      this.$post("/manage/add/save", {
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
         articleState: "1",

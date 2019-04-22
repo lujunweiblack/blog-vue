@@ -103,7 +103,7 @@ export default {
         return;
       }
 
-      this.$post("/BLOG-MANAGE/manage/user/login", {
+      this.$post("/manage/user/login", {
         userName: this.userName,
         passWord: this.passWord
       }).then(response => {
