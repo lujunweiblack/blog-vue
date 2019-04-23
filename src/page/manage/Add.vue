@@ -23,7 +23,13 @@
       <hr>
     </div>
 
-    <mavon-editor v-model="editorValue" class="mavon_c"/>
+    <mavon-editor
+      v-model="editorValue"
+      ref="md"
+      @imgAdd="imgAdd"
+      :toolbars="markdownOption"
+      class="mavon_c"
+    />
     <div v-wechat-title="title"></div>
   </div>
 </template>
@@ -32,6 +38,8 @@
 import VueMarkdown from "vue-markdown";
 var qs = require("qs");
 import { formatDate } from "@/common/date.js"; //在组件中引用date.js
+//七牛上传插件
+import * as qiniu from "qiniu-js";
 
 export default {
   name: "Add",
@@ -50,42 +58,61 @@ export default {
       title: "文章编写",
       articleTitleName: "",
       articleIntroduction: "",
-      editorValue: ""
+      editorValue: "",
+      articleId: "",
+      markdownOption: {
+        bold: true, // 粗体
+        italic: true, // 斜体
+        header: true, // 标题
+        underline: true, // 下划线
+        strikethrough: true, // 中划线
+        mark: true, // 标记
+        superscript: true, // 上角标
+        subscript: true, // 下角标
+        quote: true, // 引用
+        ol: true, // 有序列表
+        ul: true, // 无序列表
+        link: true, // 链接
+        imagelink: true, // 图片链接
+        code: true, // code
+        table: true, // 表格
+        fullscreen: true, // 全屏编辑
+        readmodel: true, // 沉浸式阅读
+        htmlcode: true, // 展示html源码
+        help: true, // 帮助
+        /* 1.3.5 */
+        undo: true, // 上一步
+        redo: true, // 下一步
+        trash: true, // 清空
+        save: false, // 保存（触发events中的save事件）
+        /* 1.4.2 */
+        navigation: true, // 导航目录
+        /* 2.1.8 */
+        alignleft: true, // 左对齐
+        aligncenter: true, // 居中
+        alignright: true, // 右对齐
+        /* 2.2.1 */
+        subfield: true, // 单双栏模式
+        preview: true // 预览
+      }
     };
   },
   components: {
     VueMarkdown
   },
   methods: {
-    save() {
-       if(this.check() == null){
-          return;
-      }
-      this.$post("/manage/add/save", {
-        articleTitleName: this.articleTitleName,
-        articleIntroduction: this.articleIntroduction,
-        articleState: "0",
-        backupFieldOne: this.editorValue
-      }).then(response => {
-        console.log(response);
-        if (response.code == "10200") {
-          alert("操作成功");
-        } else {
-          alert("操作失败");
-        }
-      });
-    },
     complete() {
-       if(this.check() == null){
-          return;
+      if (this.check() == null) {
+        return;
       }
-      this.$post("/manage/add/save", {
+      this.$post("/manage/add/complete", {
+        articleId: this.articleId,
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
         articleState: "0",
         backupFieldOne: this.editorValue
       }).then(response => {
-        console.log(response);
+        // console.log(response);
         if (response.code == "10200") {
           alert("操作成功");
           this.$router.push({ name: "Article" });
@@ -95,16 +122,17 @@ export default {
       });
     },
     goOnline() {
-      if(this.check() == null){
-          return;
+      if (this.check() == null) {
+        return;
       }
-      this.$post("/manage/add/save", {
+      this.$post("/manage/add/complete", {
+        articleId: this.articleId,
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
         articleState: "1",
         backupFieldOne: this.editorValue
       }).then(response => {
-        console.log(response);
+        // console.log(response);
         if (response.code == "10200") {
           alert("操作成功");
           this.$router.push({ name: "Article" });
@@ -124,11 +152,75 @@ export default {
         alert("文章内容不能为空");
         return null;
       }
-
       return 1;
+    },
+    uploadImage(image, uptoken, pos) {
+      var perfix = "assets/";
+      var suffix = image.name.substring(image.name.lastIndexOf("."));
+      let config = {
+        //useCdnDomain: true,
+        region: qiniu.region.z0 //华东
+      };
+
+      var putExtra = {
+        fname: "",
+        params: {},
+        mimeType: [] || null
+      };
+      var observable = qiniu.upload(
+        image,
+        perfix + uptoken.key + suffix,
+        uptoken.token,
+        putExtra,
+        config
+      );
+      var thisObj = this;
+      observable.subscribe({
+        next: result => {
+          // 主要用来展示进度
+          console.log(result);
+        },
+        error: errResult => {
+          // 失败报错信息
+          alert(errResult);
+          console.log(errResult);
+        },
+        complete: result => {
+          // 接收成功后返回的信息
+          // console.log(result);
+          var url =
+            "http://image.lujunwei.com/" + perfix + uptoken.key + suffix;
+          thisObj.$refs.md.$img2Url(pos, url);
+        }
+      });
+    },
+    imgAdd(pos, image) {
+      var suffix = image.name.substring(image.name.lastIndexOf("."));
+      if (suffix != ".jpg" && suffix != ".png") {
+        alert("不支持的图片类型");
+        return;
+      }
+      var thisObj = this;
+      thisObj.$post("/manage/add/image/token", {}).then(response => {
+        if (response.code == "10200") {
+          thisObj.uploadImage(image, response.result, pos);
+        } else {
+          alert("token获取失败");
+        }
+      });
     }
   },
-  beforeMount: function() {}
+  beforeMount: function() {
+    this.$post("/manage/add/articleiNextId", {}).then(response => {
+      // console.log(response);
+      if (response.code == "10200") {
+        this.articleId = response.result;
+        console.log(response);
+      } else {
+        alert("获取文章主键ID失败");
+      }
+    });
+  }
 };
 </script>
 

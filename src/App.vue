@@ -107,7 +107,7 @@ export default {
         userName: this.userName,
         passWord: this.passWord
       }).then(response => {
-        console.log(response);
+        // console.log(response);
         if (response.code == "10200") {
           alert(response.msg)
           this.$store.dispatch("fillUserObj", response.result);

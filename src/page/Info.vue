@@ -56,7 +56,7 @@ export default {
   methods: {},
   beforeMount: function() {
     this.article = this.$store.state.article;
-    console.log(this.article);
+    // console.log(this.article);
     var articleId = this.article.articleId;
     this.msg = $.ajax({
       url: "http://article.lujunwei.com/md/" + articleId + ".md?attname=", //注意:这里路径要取全

@@ -85,7 +85,7 @@ export default {
             articleId: article.articleId,
             articleState: article.articleState
           }).then(response => {
-            console.log(response);
+            // console.log(response);
             if (response.code == "10200") {
               this.onReadData();
               alert("操作成功");
@@ -105,7 +105,7 @@ export default {
           this.$post("/manage/article/markDel", {
             articleId: article.articleId
           }).then(response => {
-            console.log(response);
+            // console.log(response);
             if (response.code == "10200") {
               this.onReadData();
               alert("操作成功");
