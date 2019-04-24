@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 export default {
   name: "App",
   data() {
@@ -78,6 +80,17 @@ export default {
     };
   },
   created: function() {
+    NProgress.configure({ showSpinner: false });
+    this.$router.beforeEach((to, from, next) => {
+      NProgress.start();
+      next();
+    });
+
+    this.$router.afterEach(transition => {
+      NProgress.done();
+    });
+    NProgress.configure({ showSpinner: false });
+
     //在页面刷新时将vuex里的信息保存到localStorage里
     window.addEventListener("beforeunload", () => {
       localStorage.setItem("messageStore", JSON.stringify(this.$store.state));
@@ -97,9 +110,35 @@ export default {
     this.$store.dispatch("fillUserObj", JSON.parse(this.userObj));
   },
   methods: {
+    checkTime() {
+      var hour = new Date().getHours();
+      if (hour < 6) {
+        return "凌晨好！";
+      } else if (hour < 9) {
+        return "早上好！";
+      } else if (hour < 12) {
+        return "上午好！";
+      } else if (hour < 14) {
+        return "中午好！";
+      } else if (hour < 17) {
+        return "下午好！";
+      } else if (hour < 19) {
+        return "傍晚好！";
+      } else if (hour < 22) {
+        return "晚上好！";
+      } else {
+        return "夜里好！";
+      }
+    },
     login() {
       if (!this.userName || !this.passWord) {
-        alert("请输入用户名或密码!");
+        this.$message({
+          message: "输入用户名或密码",
+          center: true,
+          type: "error",
+          showClose: true,
+          customClass: "message_c"
+        });
         return;
       }
 
@@ -109,11 +148,22 @@ export default {
       }).then(response => {
         // console.log(response);
         if (response.code == "10200") {
-          alert(response.msg)
           this.$store.dispatch("fillUserObj", response.result);
           localStorage.setItem("userObj", JSON.stringify(response.result));
+          this.$notify({
+            title: "登陆成功",
+            message: this.checkTime() + response.result.userName,
+            position: "top-left",
+            type: "success"
+          });
         } else {
-          alert(response.msg)
+          this.$message({
+            message: response.msg,
+            center: true,
+            type: "error",
+            showClose: true,
+            customClass: "message_c"
+          });
         }
       });
     },
@@ -122,6 +172,11 @@ export default {
       this.passWord = null;
       localStorage.removeItem("userObj");
       this.$store.dispatch("fillUserObj", null);
+       this.$notify({
+            title: "退出登陆",
+            position: "top-left",
+            type: "success"
+          });
     },
     back() {
       this.$store.dispatch("changeIsOpen", false);
@@ -159,7 +214,7 @@ export default {
       this.confirmPassword = null;
       this.$store.dispatch("changeIsOpen", true);
     },
-    reset(){
+    reset() {
       this.userName = null;
       this.passWord = null;
     }
@@ -186,7 +241,7 @@ export default {
   width: 50%;
 }
 .input_d {
-  padding: 2%;
+  padding: 3.5%;
 }
 .btn_c {
   margin-left: 2%;
@@ -283,5 +338,8 @@ export default {
 }
 a:link {
   text-decoration: none;
+}
+.message_c {
+  margin-top: 2.4%;
 }
 </style>

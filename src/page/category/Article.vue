@@ -48,37 +48,47 @@ export default {
   data() {
     return {
       articles: [],
-      store: this.$store,
+      store: this.$store
     };
   },
-  computed:{
-      userObj(){
+  computed: {
+    userObj() {
       return this.$store.state.userObj;
-      }
+    }
   },
   methods: {
     jumpCategory(articleId, index) {
       var article = this.articles[index];
       this.$store.dispatch("fillArticle", article);
-      this.$router.push({ name: "Info" });
+      this.$router.push({ name: "info" });
     },
     //
     add() {
-      this.$router.push({ name: "Add" });
+      this.$router.push({ name: "add" });
     },
     edit() {
       var articles = this.buttonCheck();
       if (articles.length == 0 || articles.length > 1) {
-        alert("请勾选一条数据");
+        this.$message({
+          message: "请勾选一条数据",
+          center: true,
+          type: "error",
+          showClose: true
+        });
       } else {
         this.$store.dispatch("fillArticle", articles[0]);
-        this.$router.push({ name: "Edit" });
+        this.$router.push({ name: "edit" });
       }
     },
     line() {
       var articles = this.buttonCheck();
       if (articles.length == 0) {
-        alert("请勾选一条数据");
+        this.$message({
+          message: "请勾选一条数据",
+          center: true,
+          type: "error",
+          showClose: true
+        });
       } else {
         articles.forEach(article => {
           this.$post("/manage/article/upAndDown", {
@@ -88,9 +98,17 @@ export default {
             // console.log(response);
             if (response.code == "10200") {
               this.onReadData();
-              alert("操作成功");
+              this.$notify({
+                title: "操作成功",
+                position: "top-left",
+                type: "success"
+              });
             } else {
-              alert("操作失败");
+               this.$notify({
+                title: "操作失败",
+                position: "top-left",
+                type: "error"
+              });
             }
           });
         });
@@ -99,7 +117,12 @@ export default {
     del() {
       var articles = this.buttonCheck();
       if (articles.length == 0) {
-        alert("请勾选一条数据");
+        this.$message({
+          message: "请勾选一条数据",
+          center: true,
+          type: "error",
+          showClose: true
+        });
       } else {
         articles.forEach(article => {
           this.$post("/manage/article/markDel", {
@@ -108,9 +131,17 @@ export default {
             // console.log(response);
             if (response.code == "10200") {
               this.onReadData();
-              alert("操作成功");
+               this.$notify({
+                title: "删除成功",
+                position: "top-left",
+                type: "success"
+              });
             } else {
-              alert("操作失败");
+             this.$notify({
+                title: "删除失败",
+                position: "top-left",
+                type: "error"
+              });
             }
           });
         });
@@ -128,21 +159,26 @@ export default {
     },
     onReadData() {
       var userParam = "&articleState=1";
-      if(this.$store.state.userObj!=null && this.$store.state.userObj.sysRoles[0].code=='ROLE_SYS_ADMIN'){
-          userParam=""
+      if (
+        this.$store.state.userObj != null &&
+        this.$store.state.userObj.sysRoles[0].code == "ROLE_SYS_ADMIN"
+      ) {
+        userParam = "";
       }
-      this.$fetch("/portal/article?articleType=1"+userParam).then(response => {
-        this.$store.dispatch("fillArticles", response.result);
-        this.articles = response.result;
-      });
+      this.$fetch("/portal/article?articleType=1" + userParam).then(
+        response => {
+          this.$store.dispatch("fillArticles", response.result);
+          this.articles = response.result;
+        }
+      );
     }
   },
   mounted: function() {
     this.onReadData();
   },
-   watch:{
-    userObj:function(newStore,oldStore){
-     this.onReadData();
+  watch: {
+    userObj: function(newStore, oldStore) {
+      this.onReadData();
     }
   }
 };

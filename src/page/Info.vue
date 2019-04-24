@@ -34,7 +34,7 @@ import VueMarkdown from "vue-markdown";
 import { formatDate } from "@/common/date.js"; //在组件中引用date.js
 
 export default {
-  name: "Info",
+  name: "info",
   filters: {
     formatDate(time) {
       var date = new Date(time);

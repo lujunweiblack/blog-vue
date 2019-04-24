@@ -14,67 +14,59 @@ const Article = () => import('@/page/category/Article')
 const Info = () => import('@/page/Info')
 const Add = () => import('@/page/manage/Add')
 const Edit = () => import('@/page/manage/Edit')
-
 Vue.use(Router)
 Vue.use(mavonEditor)
 export default new Router({
-  base: '/dist/',  //添加的地方
+ // base: '/blog/',  //添加的地方
   routes: [
     {
       path: '/',
-      name: 'Home',
+      name: 'home',
       component: Home,
       meta: {
         title: "傻不拉几的二哈"
       }
     },
     {
-      path: '/Life',
-      name: 'Life',
+      path: '/life',
+      name: 'life',
       component: Life,
       meta: {
         title: "生  活"
       }
     },
     {
-      path: '/Article',
-      name: 'Article',
+      path: '/article',
+      name: 'article',
       component: Article,
       meta: {
         title: "文  章"
       }
     },
     {
-      path: '/Info',
-      name: 'Info',
+      path: '/info',
+      name: 'info',
       component: Info,
 
     },
     {
-      path: '/HelloWorld',
-      name: 'HelloWorld',
+      path: '/helloWorld',
+      name: 'helloWorld',
       component: HelloWorld,
       meta: {
         title: "VUE"
       }
     },
     {
-      path: '/HelloWorld',
-      name: 'HelloWorld',
-      component: HelloWorld,
-      meta: {
-        title: "VUE"
-      }
-    },
-    {
-      path: '/manage/Add',
-      name: 'Add',
+      path: '/manage/add',
+      name: 'add',
       component: Add,
     },
     {
-      path: '/manage/Edit',
-      name: 'Edit',
+      path: '/manage/edit',
+      name: 'edit',
       component: Edit,
     },
-  ]
+  ],
+  mode:'history'   //去除#号
 })

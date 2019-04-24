@@ -13,7 +13,7 @@
 </template>
 <script>
 export default {
-  name: "Home",
+  name: "home",
   data() {
     return {
       categorys: []
@@ -30,19 +30,19 @@ export default {
     this.categorys = [
       {
         categoryName: "生  活",
-        categoryCode: "Life",
+        categoryCode: "life",
         categoryDes:
           "生活像一团麻，总有那解不开的小疙瘩呀，生活像一杯酒啊，尝遍了人生酸甜苦辣的苦乐年华。"
       },
       {
         categoryName: "文  章",
-        categoryCode: "Article",
+        categoryCode: "article",
         categoryDes:
           "自己不会的题目，去看了别人的一会儿就会忘记，但如果是自己思考出来的，就会记得很牢。多学习，多深入，多总结。"
       },
       {
         categoryName: "VUE",
-        categoryCode: "HelloWorld",
+        categoryCode: "helloWorld",
         categoryDes:
           "一套用于构建用户界面的渐进式框架。与其它大型框架不同的是，Vue 被设计为可以自底向上逐层应用。"
       }

@@ -114,10 +114,18 @@ export default {
       }).then(response => {
         // console.log(response);
         if (response.code == "10200") {
-          alert("操作成功");
-          this.$router.push({ name: "Article" });
+          this.$notify({
+            title: "操作成功",
+            position: "top-left",
+            type: "success"
+          });
+          this.$router.push({ name: "article" });
         } else {
-          alert("操作失败");
+          this.$notify({
+            title: "操作失败",
+            position: "top-left",
+            type: "error"
+          });
         }
       });
     },
@@ -134,22 +142,45 @@ export default {
       }).then(response => {
         // console.log(response);
         if (response.code == "10200") {
-          alert("操作成功");
-          this.$router.push({ name: "Article" });
+          this.$router.push({ name: "article" });
+          this.$notify({
+            title: "操作成功",
+            position: "top-left",
+            type: "success"
+          });
         } else {
-          alert("操作失败");
+          this.$notify({
+            title: "操作失败",
+            position: "top-left",
+            type: "error"
+          });
         }
       });
     },
     check() {
       if (!this.articleTitleName) {
-        alert("标题不能为空");
+        this.$message({
+          message: "标题不能为空",
+          center: true,
+          type: "error",
+          showClose: true
+        });
         return null;
       } else if (!this.articleIntroduction) {
-        alert("文章简介不能为空");
+        this.$message({
+          message: "文章简介不能为空",
+          center: true,
+          type: "error",
+          showClose: true
+        });
         return null;
       } else if (!this.editorValue) {
-        alert("文章内容不能为空");
+        this.$message({
+          message: "文章内容不能为空",
+          center: true,
+          type: "error",
+          showClose: true
+        });
         return null;
       }
       return 1;
