@@ -11,8 +11,6 @@
           <li v-if="article.publishDate!=null" class="timer">{{ article.publishDate | formatDate }}</li>
           <li v-if="article.publishDate==null" class="timer">未上线</li>
           <li class="view">{{ article.articleBrowseCount }} 已阅读</li>
-          <!-- 点赞功能先注释 -->
-          <!-- <a href="javasctipt:void(0);"><li class="like">{{ article.articleLikeCount }}</li></a> -->
         </ul>
       </div>
     </div>
@@ -55,14 +53,32 @@ export default {
   },
   methods: {},
   beforeMount: function() {
-    this.article = this.$store.state.article;
-    // console.log(this.article);
-    var articleId = this.article.articleId;
-    this.msg = $.ajax({
-      url: "http://article.lujunwei.com/md/" + articleId + ".md?attname=", //注意:这里路径要取全
+    var thisObj = this;
+    thisObj.articleId = thisObj.$route.query.articleId;
+    thisObj.msg = $.ajax({
+      url:
+        "http://article.lujunwei.com/md/" + thisObj.articleId + ".md?attname=", //注意:这里路径要取全
       async: false
     }).responseText;
-    this.defaultData = "preview";
+    thisObj.defaultData = "preview";
+
+    //后台
+    thisObj
+      .$fetch("/portal/article?articleId=" + thisObj.articleId)
+      .then(response => {
+        if (response.code == 10200) {
+          thisObj.article = response.result[0];
+        } else {
+          thisObj.$message({
+            message: "网络出错，请稍后再戳...",
+            center: true,
+            type: "error",
+            onClose: function() {
+              thisObj.$router.push({ name: "article" });
+            }
+          });
+        }
+      });
   }
 };
 </script>
@@ -96,6 +112,7 @@ a:hover {
   border-radius: 6px;
   margin-bottom: 2%;
   text-align: center;
+  margin-top: 2%;
 }
 .bloginfo {
   width: 100%;

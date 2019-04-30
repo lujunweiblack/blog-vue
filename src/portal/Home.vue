@@ -6,12 +6,12 @@
           <h3>{{ val.categoryName }}</h3>
           <p>{{ val.categoryDes }}</p>
         </a>
-        <hr>
       </div>
     </div>
   </div>
 </template>
 <script>
+
 export default {
   name: "home",
   data() {
@@ -22,7 +22,7 @@ export default {
   methods: {
     jumpCategory(categoryCode) {
       this.$router.push({
-        name: categoryCode,
+        name: categoryCode
       });
     }
   },
@@ -53,11 +53,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin-top: 6%;
+.item_c {
+  padding: 3%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  margin-bottom: 2%;
 }
 p {
-  margin-top: 2%;
+  margin-top: 1%;
 }
 a:link {
   color: #2c3e50;

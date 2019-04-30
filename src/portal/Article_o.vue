@@ -1,10 +1,6 @@
 <template>
-  <div class="container">
     <!-- 操作按钮 -->
-    <div
-      v-if="this.$store.state.userObj!=null && this.$store.state.userObj.sysRoles[0].code=='ROLE_SYS_ADMIN'"
-      class="operation_c"
-    >
+    <div v-if="this.$store.state.userObj!=null && this.$store.state.userObj.sysRoles[0].code=='ROLE_SYS_ADMIN'" class="operation_c">
       <a @click="line()" class="operation_c" href="JavaScript: void(0);">
         <span class="span_line_c">&nbsp;&nbsp;&nbsp;&nbsp;</span>上下线
       </a>
@@ -39,12 +35,16 @@
       </a>
       <hr>
     </div>
-  </div>
+
 </template>
 
 <script>
+const Category = () => import('@/components/Category')
 export default {
   name: "Article",
+  components: {
+      'v-category': Category
+    },
   data() {
     return {
       articles: [],
@@ -191,33 +191,33 @@ export default {
 }
 .span_add_c {
   margin-right: 1%;
-  background-image: url(../../../static/images/add.png);
+  background-image: url(../../static/images/add.png);
   background-size: cover;
 }
 .span_add_c:hover {
   margin-right: 1%;
-  background-image: url(../../../static/images/add1.png);
+  background-image: url(../../static/images/add1.png);
   background-size: cover;
 }
 .span_edit_c {
   margin-right: 1%;
-  background-image: url(../../../static/images/edit.png);
+  background-image: url(../../static/images/edit.png);
   background-size: cover;
 }
 .span_edit_c:hover {
   margin-right: 1%;
-  background-image: url(../../../static/images/edit1.png);
+  background-image: url(../../static/images/edit1.png);
   background-size: cover;
 }
 
 .span_line_c {
   margin-right: 1%;
-  background-image: url(../../../static/images/line.png);
+  background-image: url(../../static/images/line.png);
   background-size: cover;
 }
 .span_line_c:hover {
   margin-right: 1%;
-  background-image: url(../../../static/images/line1.png);
+  background-image: url(../../static/images/line1.png);
   background-size: cover;
 }
 /* .span_offline_c {
@@ -232,27 +232,27 @@ export default {
 } */
 .span_del_c {
   margin-right: 1%;
-  background-image: url(../../../static/images/del.png);
+  background-image: url(../../static/images/del.png);
   background-size: cover;
 }
 .span_del_c:hover {
   margin-right: 1%;
-  background-image: url(../../../static/images/del1.png);
+  background-image: url(../../static/images/del1.png);
   background-size: cover;
 }
 .span_default_c {
   margin-left: 1%;
-  background-image: url(../../../static/images/article_default.png);
+  background-image: url(../../static/images/article_default.png);
   background-size: cover;
 }
 .span_running_c {
   margin-left: 1%;
-  background-image: url(../../../static/images/article_running.png);
+  background-image: url(../../static/images/article_running.png);
   background-size: cover;
 }
 .span_stop_c {
   margin-left: 1%;
-  background-image: url(../../../static/images/article_stop.png);
+  background-image: url(../../static/images/article_stop.png);
   background-size: cover;
 }
 .item_d_c {

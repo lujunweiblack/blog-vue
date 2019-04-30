@@ -1,23 +1,19 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import HelloWorld from '@/components/HelloWorld'
-// import Home from '@/page/Home'
-// import Life from '@/page/category/Life'
-// import Article from '@/page/category/Article'
-// import Info from '@/page/Info'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 const HelloWorld = () => import('@/components/HelloWorld')
-const Home = () => import('@/page/Home')
-const Life = () => import('@/page/category/Life')
-const Article = () => import('@/page/category/Article')
-const Info = () => import('@/page/Info')
-const Add = () => import('@/page/manage/Add')
-const Edit = () => import('@/page/manage/Edit')
+const Home = () => import('@/portal/Home')
+const Life = () => import('@/portal/Life')
+const Article = () => import('@/portal/Article')
+const Info = () => import('@/portal/Info')
+const Add = () => import('@/manage/Add')
+const Manage = () => import('@/manage/Manage')
+const Login = () => import('@/manage/Login')
+// const Edit = () => import('@/manage/Edit')
 Vue.use(Router)
 Vue.use(mavonEditor)
 export default new Router({
- // base: '/blog/',  //添加的地方
   routes: [
     {
       path: '/',
@@ -28,7 +24,7 @@ export default new Router({
       }
     },
     {
-      path: '/life',
+      path: '/portal/life',
       name: 'life',
       component: Life,
       meta: {
@@ -36,7 +32,7 @@ export default new Router({
       }
     },
     {
-      path: '/article',
+      path: '/portal/article',
       name: 'article',
       component: Article,
       meta: {
@@ -44,7 +40,7 @@ export default new Router({
       }
     },
     {
-      path: '/info',
+      path: '/portal/info',
       name: 'info',
       component: Info,
 
@@ -58,15 +54,26 @@ export default new Router({
       }
     },
     {
+      path: '/manage',
+      name: 'login',
+      component: Login,
+    },
+    {
+      path: '/manage/home',
+      name: 'manage',
+      component: Manage,
+    },
+    {
       path: '/manage/add',
       name: 'add',
       component: Add,
     },
-    {
-      path: '/manage/edit',
-      name: 'edit',
-      component: Edit,
-    },
+    // {
+    //   path: '/manage/edit',
+    //   name: 'edit',
+    //   component: Edit,
+    // },
+    
   ],
   mode:'history'   //去除#号
 })

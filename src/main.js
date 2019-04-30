@@ -5,9 +5,8 @@ import App from './App'
 import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min'
-import axios from 'axios'
 import {post,fetch,patch,put} from './common/http'
-import { Message,Notification} from 'element-ui';
+import { Message,Notification,Button,Container,Aside,Menu,Submenu,MenuItem,MenuItemGroup,Header,DropdownMenu,DropdownItem,Main,Table,TableColumn,Dropdown,Form,FormItem,Input } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 //导入store
 import store from './store'
@@ -20,6 +19,23 @@ Vue.prototype.$message = Message;
 Vue.prototype.$notify = Notification;`  `   
 Vue.component(Message.name, Message)
 Vue.component(Notification.name, Notification)
+Vue.component(Button.name, Button)
+Vue.component(Container.name, Container)
+Vue.component(Aside.name, Aside)
+Vue.component(Menu.name, Menu)
+Vue.component(Submenu.name, Submenu)
+Vue.component(MenuItem.name, MenuItem)
+Vue.component(MenuItemGroup.name, MenuItemGroup)
+Vue.component(Header.name, Header)
+Vue.component(Dropdown.name, Dropdown)
+Vue.component(DropdownMenu.name, DropdownMenu)
+Vue.component(DropdownItem.name, DropdownItem)
+Vue.component(Main.name, Main)
+Vue.component(Table.name, Table)
+Vue.component(TableColumn.name, TableColumn)
+Vue.component(Form.name, Form)
+Vue.component(FormItem.name, FormItem)
+Vue.component(Input.name, Input)
 Vue.config.productionTip = false
 Vue.use(require('vue-wechat-title'))
 /* eslint-disable no-new */

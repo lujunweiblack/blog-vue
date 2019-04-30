@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="container">
-      <div
+      <!-- <div
         v-if="this.$store.state.userObj==null && this.$store.state.isOpen==false"
         class="title_button"
       >
@@ -18,12 +18,11 @@
               <input type="password" v-model="passWord" class="form-control" placeholder="password">
               <button type="button" @click="login()" class="btn btn-primary btn-sm btn_c">登 陆</button>
               <button type="button" @click="reset()" class="btn btn-primary btn-sm btn_c_1">重 置</button>
-              <!-- <button type="button" @click="toRegister()" class="btn btn-default btn-sm btn_c_1">注 册</button> -->
             </div>
           </form>
         </div>
-      </div>
-      <div v-if="this.$store.state.isOpen==true" class="title_button">
+      </div> -->
+      <!-- <div v-if="this.$store.state.isOpen==true" class="title_button">
         <div class="title_input">
           <form class="bs-example bs-example-form" role="form">
             <div class="input-group input-group-sm input_d">
@@ -45,8 +44,8 @@
             </div>
           </form>
         </div>
-      </div>
-      <div v-if="this.$store.state.userObj!=null" class="user_c">
+      </div> -->
+      <!-- <div v-if="this.$store.state.userObj!=null" class="user_c">
         <div class="user_d_c">
           <span class="username">&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;
           <span class="user_n_c">{{ this.$store.state.userObj.userName }}</span>&nbsp;&nbsp;
@@ -57,7 +56,7 @@
           </a>
           <hr>
         </div>
-      </div>
+      </div> -->
       <div class="jumbotron" v-if="$route.meta.title != null">
         <h3 v-if="$route.meta.title != null" class="h3_c" v-text="$route.meta.title"></h3>
       </div>
@@ -228,6 +227,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+.jumbotron{
+  margin-top: 2%
 }
 .h3_c {
   text-align: center;
