@@ -1,84 +1,82 @@
  <template>
   <el-container style="height: 60%; border: 1px solid #eee">
-    <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-      <el-menu :default-openeds="['1', '3']">
-        <el-submenu index="1">
-          <template slot="title">
-            <i class="el-icon-message"></i>导航一
-          </template>
-          <el-menu-item-group>
-            <template slot="title">分组一</template>
-            <el-menu-item index="1-1">选项1</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="分组2">
-            <el-menu-item index="1-3">选项3</el-menu-item>
-          </el-menu-item-group>
-          <el-submenu index="1-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="1-4-1">选项4-1</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-        <el-submenu index="2">
-          <template slot="title">
-            <i class="el-icon-menu"></i>导航二
-          </template>
-          <el-menu-item-group>
-            <template slot="title">分组一</template>
-            <el-menu-item index="2-1">选项1</el-menu-item>
-            <el-menu-item index="2-2">选项2</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="分组2">
-            <el-menu-item index="2-3">选项3</el-menu-item>
-          </el-menu-item-group>
-          <el-submenu index="2-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="2-4-1">选项4-1</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-        <el-submenu index="3">
-          <template slot="title">
-            <i class="el-icon-setting"></i>导航三
-          </template>
-          <el-menu-item-group>
-            <template slot="title">分组一</template>
-            <el-menu-item index="3-1">选项1</el-menu-item>
-            <el-menu-item index="3-2">选项2</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="分组2">
-            <el-menu-item index="3-3">选项3</el-menu-item>
-          </el-menu-item-group>
-          <el-submenu index="3-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="3-4-1">选项4-1</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-      </el-menu>
-    </el-aside>
-
+    <el-header style="text-align: right; font-size: 14p;background-color: #30353c;color: #fbfbfb">
+      <span>陆军委</span>
+      <el-dropdown @command="handleCommand">
+        <i class="el-icon-caret-bottom" style="margin-right: 15px"></i>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="logout">切换账号</el-dropdown-item>
+          <el-dropdown-item command="logout">登出</el-dropdown-item>
+          <el-dropdown-item>我的</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </el-header>
     <el-container>
-      <el-header style="text-align: right; font-size: 12px">
-        <el-dropdown>
-          <i class="el-icon-setting" style="margin-right: 15px"></i>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>查看</el-dropdown-item>
-            <el-dropdown-item>新增</el-dropdown-item>
-            <el-dropdown-item>删除</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <span>王小虎</span>
-      </el-header>
-
-      <el-main>
-        <el-table :data="tableData">
-          <el-table-column prop="date" label="日期" width="140"></el-table-column>
-          <el-table-column prop="name" label="姓名" width="120"></el-table-column>
-          <el-table-column prop="address" label="地址"></el-table-column>
-        </el-table>
-      </el-main>
+      <el-aside width="200px" style="background-color: rgb(237, 237, 239);;">
+        <el-menu >
+          <template v-for="(menu,index) in this.menuList">
+            <el-submenu v-bind:index="String(menu.id)" >
+              <template slot="title">
+                <i v-bind:class="menu.icon"></i>
+                {{ menu.name }}
+              </template>
+              <template v-for="(menu_vo,index_vo) in menu.menuVo" >
+                <el-menu-item 
+                  v-bind:index="String(menu_vo.id)"
+                  @click="handleSelect(menu_vo)"
+                >{{ menu_vo.name }}</el-menu-item>
+              </template>
+            </el-submenu>
+          </template>
+        </el-menu>
+      </el-aside>
+      <router-view/>
     </el-container>
   </el-container>
 </template>
+
+
+<script>
+export default {
+  data() {
+    return {
+      menuList: []
+    };
+  },
+  methods: {
+    handleSelect(vo) {
+      this.$router.push(vo.path);
+    },
+    handleCommand(item) {
+      var obj = this;
+      if (item == "logout") {
+        obj
+          .$confirm("确认退出当前登录的用户?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+          .then(() => {
+            localStorage.removeItem("userObj");
+            localStorage.removeItem("menuList");
+            obj.$router.push({ path: "/login" });
+            obj.$message({
+              type: "success",
+              message: "已登出!"
+            });
+          })
+          .catch(() => {});
+      }
+    }
+  },
+  mounted: function() {
+    this.menuList=JSON.parse(localStorage.getItem("menuList"));
+    
+    //默认菜单
+    this.$router.push("/manage/main/home");
+  }
+};
+</script>
 
 <style>
 .el-header {
@@ -91,18 +89,3 @@
   color: #333;
 }
 </style>
-
-<script>
-export default {
-  data() {
-    const item = {
-      date: "2016-05-02",
-      name: "王小虎",
-      address: "上海市普陀区金沙江路 1518 弄"
-    };
-    return {
-      tableData: Array(20).fill(item)
-    };
-  }
-};
-</script>

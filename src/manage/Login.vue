@@ -1,25 +1,27 @@
 <template>
   <div class="container">
     <div class="form_c">
-      <el-form
-        :model="ruleForm"
-        status-icon
-        :rules="rules"
-        ref="ruleForm"
-        label-width="50px"
-        class="demo-ruleForm"
-      >
-        <el-form-item label="姓名" prop="age">
-          <el-input v-model.number="ruleForm.age"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="pass">
-          <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
-      </el-form>
+      <div class="form_form">
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
+          <h2>博客管理系统</h2>
+          <el-form-item prop="age">
+            <el-input class="el-input" placeholder="请输入用户名" v-model.number="ruleForm.userName"></el-input>
+          </el-form-item>
+          <el-form-item prop="pass">
+            <el-input
+              class="el-input"
+              placeholder="请输入密码"
+              type="password"
+              v-model="ruleForm.passWord"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+            <el-button @click="resetForm('ruleForm')">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
   </div>
 </template>
@@ -27,61 +29,33 @@
 <script>
 export default {
   data() {
-    var checkAge = (rule, value, callback) => {
+    var checkUserName = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("姓名不能为空"));
       }
-      setTimeout(() => {
-        if (!value) {
-          callback(new Error("请输入数字值"));
-        } else {
-          if (value < 18) {
-            callback(new Error("必须年满18岁"));
-          } else {
-            callback();
-          }
-        }
-      }, 1000);
     };
-    var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
-        }
-        callback();
-      }
-    };
-    var validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error("两次输入密码不一致!"));
-      } else {
-        callback();
+    var validatePassWord = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("请输入密码"));
       }
     };
     return {
       ruleForm: {
-        pass: "",
-        checkPass: "",
-        age: ""
+        passWord: "",
+        userName: ""
       },
       rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        age: [{ validator: checkAge, trigger: "blur" }]
+        passWord: [{ validator: validatePassWord, trigger: "blur" }],
+        userName: [{ validator: checkUserName, trigger: "blur" }]
       }
     };
   },
   methods: {
     submitForm(formName) {
+      this.load();
       this.$refs[formName].validate(valid => {
         if (valid) {
-         this.$router.push({
-        path: "/manage/home"
-      });
+          this.login(this);
         } else {
           console.log("error submit!!");
           return false;
@@ -89,7 +63,72 @@ export default {
       });
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      this.ruleForm = { passWord: "", userName: "" };
+    },
+    login(obj) {
+      obj
+        .$post("/manage/user/login", {
+          userName: obj.ruleForm.userName,
+          passWord: obj.ruleForm.passWord
+        })
+        .then(response => {
+          console.log(response);
+          if (response.code == "10200") {
+            //obj.$store.dispatch("fillMenuList", response.result.menuVo);
+            localStorage.setItem(
+              "userObj",
+              JSON.stringify(response.result.userObj)
+            );
+
+          var menuList = [];
+          menuList=response.result.menuVo;
+            var defaultMenu = {
+              icon: "el-icon-menu",
+              id: "defaultMenu",
+              menuVo: [
+                {
+                  componentPath: "/manage/main/HomeMain",
+                  icon: "",
+                  id: "defaultMain",
+                  menuVo: [],
+                  name: "欢迎页面",
+                  parentId: "defaultMenu",
+                  path: "/manage/main/home",
+                  type: "menu"
+                }
+              ],
+              name: "默认菜单",
+              path: "",
+              type: "menu"
+            };
+            //this.menuList.push(defaultMenu);
+            menuList.push(defaultMenu);
+            console.log(menuList)
+            localStorage.setItem(
+              "menuList",
+              JSON.stringify(menuList)
+            );
+            obj.$router.push({ path: "/manage" });
+          } else {
+            obj.$message({
+              message: response.msg,
+              center: true,
+              type: "error",
+              showClose: true,
+              customClass: "message_c"
+            });
+          }
+        });
+    },
+    load() {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
+
+      loading.close();
     }
   }
 };
@@ -97,11 +136,24 @@ export default {
 
 <style scoped>
 .container {
-  margin-right: auto;
-  margin-left: auto;
-  padding: 19%;
+  margin-top: 8%;
 }
-.form_c{
-
+.form_c {
+  /* border-style: solid; */
+  padding: 15%;
+  background-color: #8aeaca;
+  border-radius: 2%;
+}
+.form_form {
+  width: 38%;
+  margin-left: 30%;
+  text-align: center;
+}
+.el-input {
+  margin-bottom: 2%;
+}
+h2 {
+  margin-bottom: 15%;
+  font-family: Georgia;
 }
 </style>

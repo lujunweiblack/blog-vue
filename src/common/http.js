@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 axios.defaults.timeout = 10000;
-axios.defaults.baseURL ='http://188.131.240.160:9000';
-//axios.defaults.baseURL ='http://127.0.0.1:9000';
+//axios.defaults.baseURL ='http://188.131.240.160:9000';
+axios.defaults.baseURL ='http://127.0.0.1:9000';
 // axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 
 

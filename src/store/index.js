@@ -9,6 +9,7 @@ export default new Vuex.Store({
         article: {},
         userObj: {},
         isOpen: false,
+        menuList:[],
     },
     actions: {
         fillArticles(ctx, articles) {
@@ -22,6 +23,9 @@ export default new Vuex.Store({
         },
         changeIsOpen(ctx, isOpen) {
             ctx.commit('changeIsOpen', isOpen)
+        },
+        fillMenuList(ctx, menuList){
+            ctx.commit('fillMenuList', menuList)
         }
     },
     mutations: {
@@ -36,6 +40,9 @@ export default new Vuex.Store({
         },
         changeIsOpen(state, isOpen) {
             state.isOpen = isOpen
-        }
+        },
+        fillMenuList(state, menuList) {
+            state.menuList = menuList
+        },
     }
 })

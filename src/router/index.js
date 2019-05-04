@@ -8,9 +8,9 @@ const Life = () => import('@/portal/Life')
 const Article = () => import('@/portal/Article')
 const Info = () => import('@/portal/Info')
 const Add = () => import('@/manage/Add')
-const Manage = () => import('@/manage/Manage')
 const Login = () => import('@/manage/Login')
 // const Edit = () => import('@/manage/Edit')
+const Manage = () => import('@/manage/Manage')
 Vue.use(Router)
 Vue.use(mavonEditor)
 export default new Router({
@@ -54,14 +54,31 @@ export default new Router({
       }
     },
     {
-      path: '/manage',
+      path: '/login',
       name: 'login',
       component: Login,
     },
     {
-      path: '/manage/home',
+      path: '/manage',
       name: 'manage',
       component: Manage,
+      children: [ {
+          path: "/manage/main/article",
+          component: resolve => require(["@/manage/main/ArticleMain"], resolve)
+        },
+        {
+          path: "/manage/main/life",
+          component: resolve => require(["@/manage/main/LifeMain"], resolve)
+        },
+         {
+          path: "/manage/main/permission",
+          component: resolve => require(["@/manage/main/PermissionMain"], resolve)
+        },
+        {
+          path: "/manage/main/home",
+          component: resolve => require(["@/manage/main/HomeMain"], resolve)
+        }
+      ]
     },
     {
       path: '/manage/add',
