@@ -77,7 +77,11 @@ export default new Router({
         {
           path: "/manage/main/home",
           component: resolve => require(["@/manage/main/HomeMain"], resolve)
-        }
+        },
+        {
+          path: "/manage/main/time/task",
+          component: resolve => require(["@/manage/main/TimeTaskMain"], resolve)
+        },
       ]
     },
     {

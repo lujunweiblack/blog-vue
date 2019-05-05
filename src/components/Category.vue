@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <v-head></v-head>
     <div class="item" v-for="(val,index) in articles">
       <a href="javascript:void(0)" @click="jumpCategory(val.articleId,index)">
         <h4>{{ val.articleTitleName }}</h4>
@@ -10,12 +11,16 @@
 </template>
 
 <script>
+const Head = () => import("@/components/Head");
 export default {
   name: "Category",
   data() {
     return {
       articles: []
     };
+  },
+    components: {
+    "v-head": Head
   },
   props: {
     articleType: {

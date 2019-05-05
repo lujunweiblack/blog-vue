@@ -1,20 +1,39 @@
 <template>
-  <v-commonMain :articleType="3"></v-commonMain>
+  <el-main class="main_c">
+    <div class="div_c">
+       <img src="../../../static/images/4042.png"></img>
+       <h1 style="margin-bottom: 3%;">code in progress...</h1>
+    </div>
+  </el-main>
 </template>
 
 <script>
-const CommonMain = () => import("@/components/CommonMain");
 export default {
-  name: "LifeMain",
   data() {
-    return {};
+    return {
+      
+    };
   },
-  components: {
-    "v-commonMain": CommonMain
+  methods: {
+   
+  },
+  mounted: function() {
+  
   }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
+.div_c {
+  text-align: center;
+  margin-top: 5%;
+  margin-bottom: 2%;
+  font-family: cursive;
+  color: rgb(189, 184, 184);
+}
+.main_c{
+  height: 875px;
+}
 </style>
+
+

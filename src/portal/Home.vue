@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <v-head></v-head>
     <div class="text-center">
       <div class="item_c" v-for="(val,key) in categorys">
         <a href="javascript:void(0)" @click="jumpCategory(val.categoryCode)">
@@ -11,7 +12,7 @@
   </div>
 </template>
 <script>
-
+const Head = () => import("@/components/Head");
 export default {
   name: "home",
   data() {
@@ -25,6 +26,9 @@ export default {
         name: categoryCode
       });
     }
+  },
+  components: {
+    "v-head": Head
   },
   mounted: function() {
     this.categorys = [

@@ -1,9 +1,9 @@
  <template>
   <el-container style="height: 60%; border: 1px solid #eee">
     <el-header style="text-align: right; font-size: 14p;background-color: #30353c;color: #fbfbfb">
-      <span>陆军委</span>
+      <span>{{ userObj?userObj.userName:未登录 }}</span>
       <el-dropdown @command="handleCommand">
-        <i class="el-icon-caret-bottom" style="margin-right: 15px"></i>
+        <i class="el-icon-caret-bottom" style="margin-right: 30px"></i>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="logout">切换账号</el-dropdown-item>
           <el-dropdown-item command="logout">登出</el-dropdown-item>
@@ -12,8 +12,8 @@
       </el-dropdown>
     </el-header>
     <el-container>
-      <el-aside width="200px" style="background-color: rgb(237, 237, 239);;">
-        <el-menu >
+      <el-aside width="200px" style="background-color: #ededef;">
+        <el-menu class="menu_c" >
           <template v-for="(menu,index) in this.menuList">
             <el-submenu v-bind:index="String(menu.id)" >
               <template slot="title">
@@ -21,7 +21,7 @@
                 {{ menu.name }}
               </template>
               <template v-for="(menu_vo,index_vo) in menu.menuVo" >
-                <el-menu-item 
+                <el-menu-item  class="item_c"
                   v-bind:index="String(menu_vo.id)"
                   @click="handleSelect(menu_vo)"
                 >{{ menu_vo.name }}</el-menu-item>
@@ -40,7 +40,8 @@
 export default {
   data() {
     return {
-      menuList: []
+      menuList: [],
+      userObj:{}
     };
   },
   methods: {
@@ -71,7 +72,7 @@ export default {
   },
   mounted: function() {
     this.menuList=JSON.parse(localStorage.getItem("menuList"));
-    
+    this.userObj=JSON.parse(localStorage.getItem("userObj"));
     //默认菜单
     this.$router.push("/manage/main/home");
   }
@@ -87,5 +88,12 @@ export default {
 
 .el-aside {
   color: #333;
+}
+.menu_c{
+  background-color:#ededef;
+ 
+}
+.item_c{
+  background-color: #dbdbde
 }
 </style>

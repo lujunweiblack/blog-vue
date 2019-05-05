@@ -1,5 +1,5 @@
 <template>
-  <el-main>
+  <el-main class="main_c">
     <div class="sousuo">
       <el-input v-model="sousuoContent" placeholder="请输入内容..."></el-input>
       <el-button
@@ -9,7 +9,7 @@
         :loading="sousuoState"
       >{{ sousuoText }}</el-button>
     </div>
-    <el-table :data="tableData.list" v-loading="loading" :row-class-name="tableRowClassName">
+    <el-table :data="tableData.list" :row-class-name="tableRowClassName">
       >
       <!-- @selection-change="handleSelectionChange" -->
       <!-- <el-table-column type="selection" width="80"></el-table-column> -->
@@ -50,7 +50,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
+    <el-pagination v-if="tableData.total!=0"
       @current-change="handleCurrentChange"
       :page-size="10"
       background
@@ -71,7 +71,7 @@ export default {
       loading: false,
       sousuoState: false,
       sousuoText: "搜索",
-      sousuoContent: ""
+      sousuoContent: "",
     };
   },
   props: {
@@ -213,11 +213,21 @@ export default {
         "&pageNum=" +
         val +
         "&pageSize=" +
-        10;
-      this.$fetch("/portal/article/page" + param).then(response => {
+        10+"&articleTitleName="+this.sousuoContent;
+      this.$fetch("/manage/article/page" + param).then(response => {
+        if(response.code == "10200"){
         this.tableData = response.result;
         this.sousuoState = false;
         this.sousuoText = "搜索";
+        }else {
+          this.$message({
+            message: "信息拉取失败，请检查网络",
+            center: true,
+            showClose: true,
+            type: "error"
+          });
+        }
+       
       });
     },
     formatterDate(row, column, cellValue) {
@@ -230,7 +240,7 @@ export default {
     formatterArticleType(row, column, cellValue) {
       if (cellValue == 1) {
         return "技术文章";
-      } else if (cellValue == 0) {
+      } else if (cellValue == 2) {
         return "生活日常";
       }
     },
@@ -254,6 +264,9 @@ export default {
 </script>
 
 <style>
+.main_c{
+  height: 875px;
+}
 .sousuo {
   display: inline-flex;
 }

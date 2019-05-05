@@ -2,12 +2,12 @@
   <div class="container">
     <div class="form_c">
       <div class="form_form">
-        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm" >
           <h2>博客管理系统</h2>
-          <el-form-item prop="age">
+          <el-form-item prop="userName">
             <el-input class="el-input" placeholder="请输入用户名" v-model.number="ruleForm.userName"></el-input>
           </el-form-item>
-          <el-form-item prop="pass">
+          <el-form-item prop="passWord">
             <el-input
               class="el-input"
               placeholder="请输入密码"
@@ -17,7 +17,7 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+            <el-button type="primary" @click="submitForm('ruleForm')" >登陆</el-button>
             <el-button @click="resetForm('ruleForm')">重置</el-button>
           </el-form-item>
         </el-form>
@@ -33,11 +33,13 @@ export default {
       if (!value) {
         return callback(new Error("姓名不能为空"));
       }
+      callback();
     };
     var validatePassWord = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("请输入密码"));
       }
+       callback();
     };
     return {
       ruleForm: {
@@ -52,15 +54,21 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      this.load();
+     const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.login(this);
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
+      
+      loading.close();
     },
     resetForm(formName) {
       this.ruleForm = { passWord: "", userName: "" };
@@ -118,18 +126,8 @@ export default {
               customClass: "message_c"
             });
           }
-        });
+        })
     },
-    load() {
-      const loading = this.$loading({
-        lock: true,
-        text: "Loading",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
-      });
-
-      loading.close();
-    }
   }
 };
 </script>
