@@ -80,7 +80,7 @@ export default {
           passWord: obj.ruleForm.passWord
         })
         .then(response => {
-          console.log(response);
+
           if (response.code == "10200") {
             //obj.$store.dispatch("fillMenuList", response.result.menuVo);
             localStorage.setItem(
@@ -111,7 +111,7 @@ export default {
             };
             //this.menuList.push(defaultMenu);
             menuList.push(defaultMenu);
-            console.log(menuList)
+
             localStorage.setItem(
               "menuList",
               JSON.stringify(menuList)

@@ -1,6 +1,6 @@
 <template>
   <el-main class="main_c">
-    <div class="sousuo">
+    <div class="button_c">
       <el-input v-model="sousuoContent" placeholder="请输入内容..."></el-input>
       <el-button
         type="primary"
@@ -8,6 +8,7 @@
         icon="el-icon-search"
         :loading="sousuoState"
       >{{ sousuoText }}</el-button>
+      <el-button type="primary" @click="openAdd" icon="el-icon-edit">{{ articleType | checkType }}</el-button>
     </div>
     <el-table :data="tableData.list" :row-class-name="tableRowClassName">
       >
@@ -50,7 +51,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination v-if="tableData.total!=0"
+    <el-pagination
+      v-if="tableData.total>10"
       @current-change="handleCurrentChange"
       :page-size="10"
       background
@@ -61,7 +63,13 @@
 </template>
 
 <script>
-import { formatDate } from "@/common/date.js"; //在组件中引用date.js
+import {
+  paramJsonToStr,
+  formatterDate,
+  formatterArticleType,
+  tableRowClassName
+} from "@/common/data.js";
+
 import { request } from "https";
 export default {
   data() {
@@ -72,6 +80,10 @@ export default {
       sousuoState: false,
       sousuoText: "搜索",
       sousuoContent: "",
+      userObj: {},
+      formatterDate,
+      formatterArticleType,
+      tableRowClassName
     };
   },
   props: {
@@ -81,18 +93,36 @@ export default {
       currentPage: 0
     }
   },
+  filters: {
+    checkType: function(data) {
+      switch (data) {
+        case 1:
+          return "写文章";
+        case 2:
+          return "写生活";
+      }
+    }
+  },
   methods: {
     sousuoButton() {
       this.sousuoState = true;
       this.sousuoText = "搜索中...";
-      this.onReadData(this.currentPage ? this.currentPage : 1);
+      this.onReadData(1);
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    handleClickQ(row) {
-      //查看
-      window.location.href = "http://127.0.0.1:8080/portal/info?articleId=16";
+    openAdd() {
+      this.$post("/manage/add/articleiNextId", {}).then(response => {
+      if (response.code == "10200") {
+        this.$store.dispatch("fillArticleId",  response.result);
+      } else {
+        this.$message({
+          message: "获取文章主键ID失败",
+          center: true,
+          type: "error",
+          showClose: true
+        });
+      }
+    });
+      this.$store.dispatch("changeIsOpen", true);
     },
     handleClickO(row) {
       //上线
@@ -105,27 +135,17 @@ export default {
         });
         return;
       }
-      this.$post("/manage/article/upAndDown", {
-        articleId: row.articleId,
-        articleState: 1
-      }).then(response => {
-        if (response.code == "10200") {
-          this.onReadData(this.currentPage ? this.currentPage : 1);
-          this.$message({
-            message: "成功上线",
-            center: true,
-            showClose: true,
-            type: "success"
-          });
-        } else {
-          this.$message({
-            message: "操作失败",
-            center: true,
-            showClose: true,
-            type: "error"
-          });
-        }
-      });
+      this.handleClickCommon(
+        "操作失败",
+        "成功下线",
+        "/manage/article/upAndDown",
+        {
+          articleId: row.articleId,
+          articleState: 1
+        },
+        "on",
+        "post"
+      );
     },
     handleClickOffline(row) {
       //下线
@@ -138,27 +158,17 @@ export default {
         });
         return;
       }
-      this.$post("/manage/article/upAndDown", {
-        articleId: row.articleId,
-        articleState: 0
-      }).then(response => {
-        if (response.code == "10200") {
-          this.onReadData(this.currentPage ? this.currentPage : 1);
-          this.$message({
-            message: "成功下线",
-            center: true,
-            showClose: true,
-            type: "success"
-          });
-        } else {
-          this.$message({
-            message: "操作失败",
-            center: true,
-            showClose: true,
-            type: "error"
-          });
-        }
-      });
+      this.handleClickCommon(
+        "操作失败",
+        "成功下线",
+        "/manage/article/upAndDown",
+        {
+          articleId: row.articleId,
+          articleState: 0
+        },
+        "off",
+        "post"
+      );
     },
     handleClickD(row) {
       //删除
@@ -179,96 +189,119 @@ export default {
         });
         return;
       }
-
-      this.$post("/manage/article/upAndDown", {
-        articleId: row.articleId,
-        articleState: 2
-      }).then(response => {
-        if (response.code == "10200") {
-          this.onReadData(this.currentPage ? this.currentPage : 1);
-          this.$message({
-            message: "删除成功（标记）",
-            center: true,
-            showClose: true,
-            type: "success"
-          });
-        } else {
-          this.$message({
-            message: "操作失败",
-            center: true,
-            showClose: true,
-            type: "error"
-          });
-        }
-      });
+      this.handleClickCommon(
+        "操作失败",
+        "删除成功（标记）",
+        "/manage/article/upAndDown",
+        {
+          articleId: row.articleId,
+          articleState: 2
+        },
+        "del",
+        "post"
+      );
+    },
+    handleClickCommon(errorMsg, successMsg, url, param, clickType, ajaxType) {
+      if (ajaxType == "post") {
+        this.$post(url, param ).then(response => {
+          if (response.code == "10200") {
+            switch (clickType) {
+              case "on":
+                this.onReadData(this.currentPage ? this.currentPage : 1);
+                break;
+              case "off":
+                this.onReadData(this.currentPage ? this.currentPage : 1);
+                break;
+              case "del":
+                this.onReadData(this.currentPage ? this.currentPage : 1);
+                break;
+            }
+            this.$message({
+              message: successMsg,
+              center: true,
+              showClose: true,
+              type: "success"
+            });
+          } else {
+            this.$message({
+              message: errorMsg,
+              center: true,
+              showClose: true,
+              type: "error"
+            });
+          }
+        });
+      } else {
+        this.$fetch(url + param).then(response => {
+          if (response.code == "10200") {
+            switch (clickType) {
+              case "red":
+                this.tableData = response.result;
+                this.sousuoState = false;
+                this.sousuoText = "搜索";
+                break;
+            }
+            if (!successMsg) {
+              return;
+            }
+            this.$message({
+              message: successMsg,
+              center: true,
+              showClose: true,
+              type: "success"
+            });
+          } else {
+            this.$message({
+              message: errorMsg,
+              center: true,
+              showClose: true,
+              type: "error"
+            });
+          }
+        });
+      }
     },
     handleCurrentChange(val) {
       this.currentPage = val;
       this.onReadData(val);
     },
     onReadData(val) {
-      var param =
-        "?articleType=" +
-        this.articleType +
-        "&pageNum=" +
-        val +
-        "&pageSize=" +
-        10+"&articleTitleName="+this.sousuoContent;
-      this.$fetch("/manage/article/page" + param).then(response => {
-        if(response.code == "10200"){
-        this.tableData = response.result;
-        this.sousuoState = false;
-        this.sousuoText = "搜索";
-        }else {
-          this.$message({
-            message: "信息拉取失败，请检查网络",
-            center: true,
-            showClose: true,
-            type: "error"
-          });
-        }
-       
-      });
-    },
-    formatterDate(row, column, cellValue) {
-      if (!cellValue) {
-        return "未上线";
-      }
-      var date = new Date(cellValue);
-      return formatDate(date, "yyyy-MM-dd hh:mm");
-    },
-    formatterArticleType(row, column, cellValue) {
-      if (cellValue == 1) {
-        return "技术文章";
-      } else if (cellValue == 2) {
-        return "生活日常";
-      }
-    },
-    tableRowClassName({ row }) {
-      if (row.articleState === 1) {
-        return "success-row";
-      } else if (row.articleState === 0) {
-        //  return "default-row";
-      } else if (row.articleState === 2) {
-        return "error-row";
-      }
-      return "";
+      var param = {
+        articleType: this.articleType,
+        pageNum: val,
+        pageSize: 10,
+        articleTitleName: this.sousuoContent,
+        authorId: JSON.parse(localStorage.getItem("userObj")).id
+      };
+      this.handleClickCommon(
+        "信息拉取失败，请检查网络",
+        "",
+        "/manage/article/page",
+        paramJsonToStr(param),
+        "red",
+        "fetch"
+      );
     }
   },
   mounted: function() {
     // this.loading = true;
     this.onReadData(1);
     // this.loading = false;
+    this.$store.dispatch("changeIsOpen", false);
+    this.userObj = JSON.parse(localStorage.getItem("userObj"));
   }
 };
 </script>
 
 <style>
-.main_c{
+.main_c {
   height: 875px;
 }
-.sousuo {
+.button_c {
   display: inline-flex;
+}
+.add_c {
+  text-align: right;
 }
 .el-table .warning-row {
   background: oldlace;

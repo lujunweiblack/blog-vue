@@ -1,16 +1,26 @@
 <template>
-  <v-commonMain :articleType="2"></v-commonMain>
+  <div style="width:100%">
+    <v-addMain :articleType="2" @parentFn="refreshData"></v-addMain>
+    <v-commonMain :articleType="2" ref="commonMain"></v-commonMain>
+  </div>
 </template>
 
 <script>
 const CommonMain = () => import("@/components/CommonMain");
+const AddMain = () => import("@/manage/main/AddMain");
 export default {
   name: "ArticleMain",
   data() {
     return {};
   },
+  methods:{
+    refreshData(){
+      this.$refs.commonMain.onReadData(1);
+    }
+  },
   components: {
-    "v-commonMain": CommonMain
+    "v-commonMain": CommonMain,
+    "v-addMain": AddMain
   }
 };
 </script>

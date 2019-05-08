@@ -1,65 +1,87 @@
 <template>
-  <div class="container">
-    <div class="title_d_c">
-      <div class="title_d_b_c">
-        <!-- <button type="button" @click="save()" class="btn btn-default btn-sm btn_c">保存</button> -->
-        <button type="button" @click="complete()" class="btn btn-primary btn-sm btn_c">完成</button>
-        <button type="button" @click="goOnline()" class="btn btn-primary btn-sm btn_c">完成&发布</button>
+  <div>
+    <el-dialog
+      :title="articleType | checkType"
+      :fullscreen="false"
+      :visible.sync="dialogFormVisible.isOpen"
+      :close-on-click-modal=false
+      :close-on-press-escape=false
+    >
+      <div class="container">
+        <div class="title_d_b_c">
+          <el-button type="primary" @click="completeOrOnline(0)" size="small">完成</el-button>
+          <el-button type="primary" @click="completeOrOnline(1)" size="small">完成&发布</el-button>
+        </div>
+        <div class="title_d_d_c">
+          <input v-model="articleTitleName" class="title_i_c" placeholder="在这里输入文章标题. . .">
+        </div>
+        <div class="title_d_d_c">
+          <textarea
+            v-model="articleIntroduction"
+            placeholder="在这里输入文章简介. . ."
+            rows="3"
+            class="title_i_2_c"
+            cols="20"
+          ></textarea>
+        </div>
+        <hr>
+        <mavon-editor
+          v-model="editorValue"
+          ref="md"
+          @imgAdd="imgAdd"
+          :toolbars="markdownOption"
+          class="mavon_c"
+        />
       </div>
-      <div class="title_d_d_c">
-        <!-- <span class="title_s_c">文章标题：</span> -->
-        <input v-model="articleTitleName" class="title_i_c" placeholder="在这里输入文章标题. . .">
-      </div>
-      <div class="title_d_d_c">
-        <!-- <span class="title_s_c">文章简介：</span> -->
-        <textarea
-          v-model="articleIntroduction"
-          placeholder="在这里输入文章简介. . ."
-          rows="3"
-          class="title_i_2_c"
-          cols="20"
-        ></textarea>
-      </div>
-      <hr>
-    </div>
-
-    <mavon-editor
-      v-model="editorValue"
-      ref="md"
-      @imgAdd="imgAdd"
-      :toolbars="markdownOption"
-      class="mavon_c"
-    />
-    <div v-wechat-title="title"></div>
+      <!-- <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="notOpen">取 消</el-button>
+        <el-button size="small" type="primary" >确 定</el-button>
+      </div>-->
+    </el-dialog>
   </div>
 </template>
 
 <script >
-import VueMarkdown from "vue-markdown";
 var qs = require("qs");
-import { formatDate } from "@/common/date.js"; //在组件中引用date.js
-//七牛上传插件
 import * as qiniu from "qiniu-js";
+import VueMarkdown from "vue-markdown";
+import { formatDate } from "@/common/data.js";
 
 export default {
   name: "Add",
   filters: {
     formatDate(time) {
       var date = new Date(time);
-      return formatDate(date, "yyyy-MM-dd hh:mm"); //年月日 格式自己定义   'yyyy : MM : dd'  例 2018年12月5日的格式
+      return formatDate(date, "yyyy-MM-dd hh:mm");
     },
     formatDateTwo(time) {
       var date = new Date(time);
-      return formatDate(date, "hh:mm:ss"); //时间点 例 21点12分12秒的格式
+      return formatDate(date, "hh:mm:ss");
+    },
+    checkType: function(data) {
+      switch (data) {
+        case 1:
+          return "写文章";
+        case 2:
+          return "写生活";
+      }
+    }
+  },
+  props: {
+    articleType: {
+      type: Number,
+      default: 1,
+      currentPage: 0
     }
   },
   data() {
     return {
-      title: "文章编写",
+      dialogTableVisible: false,
+      dialogFormVisible: this.$store.state,
+      formLabelWidth: "200px",
       articleTitleName: "",
       articleIntroduction: "",
       editorValue: "",
-      articleId: "",
       markdownOption: {
         bold: true, // 粗体
         italic: true, // 斜体
@@ -101,53 +123,30 @@ export default {
     VueMarkdown
   },
   methods: {
-    complete() {
-      if (this.check() == null) {
-        return;
-      }
-      this.$post("/manage/add/complete", {
-        articleId: this.articleId,
-        articleTitleName: this.articleTitleName,
-        articleIntroduction: this.articleIntroduction,
-        articleState: "0",
-        backupFieldOne: this.editorValue
-      }).then(response => {
-        // console.log(response);
-        if (response.code == "10200") {
-          this.$notify({
-            title: "操作成功",
-            position: "top-left",
-            type: "success"
-          });
-          this.$router.push({ name: "article" });
-        } else {
-          this.$notify({
-            title: "操作失败",
-            position: "top-left",
-            type: "error"
-          });
-        }
-      });
+    notOpen() {
+      this.$store.dispatch("changeIsOpen", false);
     },
-    goOnline() {
+    completeOrOnline(type) {
       if (this.check() == null) {
         return;
       }
       this.$post("/manage/add/complete", {
-        articleId: this.articleId,
+        articleId:this.$store.state.articleId,
         articleTitleName: this.articleTitleName,
         articleIntroduction: this.articleIntroduction,
-        articleState: "1",
-        backupFieldOne: this.editorValue
+        articleState: type,
+        backupFieldOne: this.editorValue,
+        articleType:this.articleType
       }).then(response => {
-        // console.log(response);
         if (response.code == "10200") {
-          this.$router.push({ name: "article" });
-          this.$notify({
-            title: "操作成功",
-            position: "top-left",
+          this.$message({
+            message: "资源添加成功",
+            center: true,
+            showClose: true,
             type: "success"
           });
+          this.$store.dispatch("changeIsOpen", false);
+          this.$emit('parentFn',{});
         } else {
           this.$notify({
             title: "操作失败",
@@ -158,32 +157,27 @@ export default {
       });
     },
     check() {
+      var flag = 1;
+      var msg = "";
       if (!this.articleTitleName) {
-        this.$message({
-          message: "标题不能为空",
-          center: true,
-          type: "error",
-          showClose: true
-        });
-        return null;
+        msg = "标题不能为空";
+        flag = null;
       } else if (!this.articleIntroduction) {
-        this.$message({
-          message: "文章简介不能为空",
-          center: true,
-          type: "error",
-          showClose: true
-        });
-        return null;
+        msg = "文章简介不能为空";
+        flag = null;
       } else if (!this.editorValue) {
+        msg = "文章内容不能为空";
+        flag = null;
+      }
+      if (flag == null) {
         this.$message({
-          message: "文章内容不能为空",
+          message: msg,
           center: true,
           type: "error",
           showClose: true
         });
-        return null;
       }
-      return 1;
+      return flag;
     },
     uploadImage(image, uptoken, pos) {
       var perfix = "assets/";
@@ -209,16 +203,13 @@ export default {
       observable.subscribe({
         next: result => {
           // 主要用来展示进度
-          console.log(result);
         },
         error: errResult => {
           // 失败报错信息
           alert(errResult);
-          console.log(errResult);
         },
         complete: result => {
           // 接收成功后返回的信息
-          // console.log(result);
           var url =
             "http://image.lujunwei.com/" + perfix + uptoken.key + suffix;
           thisObj.$refs.md.$img2Url(pos, url);
@@ -236,36 +227,28 @@ export default {
         if (response.code == "10200") {
           thisObj.uploadImage(image, response.result, pos);
         } else {
-          alert("token获取失败");
+          this.$message({
+            message: "token获取失败",
+            center: true,
+            type: "error",
+            showClose: true
+          });
         }
       });
     }
   },
-  beforeMount: function() {
-    this.$post("/manage/add/articleiNextId", {}).then(response => {
-      // console.log(response);
-      if (response.code == "10200") {
-        this.articleId = response.result;
-        console.log(response);
-      } else {
-        alert("获取文章主键ID失败");
-      }
-    });
-  }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.btn_c {
-  margin-left: 0%;
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
 }
-.title_d_c {
-  margin-top: 2%;
-}
-.title_s_c {
-  font-size: 20px;
-  font-weight: bold;
+.title_d_b_c {
+  margin-bottom: 2%;
 }
 .title_d_d_c {
   margin-top: 1%;
@@ -288,6 +271,6 @@ export default {
   padding-right: 1.5%;
 }
 .mavon_c {
-  margin-bottom: 5%;
+  margin-bottom: 2%;
 }
 </style>

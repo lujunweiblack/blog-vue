@@ -7,7 +7,6 @@ const Home = () => import('@/portal/Home')
 const Life = () => import('@/portal/Life')
 const Article = () => import('@/portal/Article')
 const Info = () => import('@/portal/Info')
-const Add = () => import('@/manage/Add')
 const Login = () => import('@/manage/Login')
 // const Edit = () => import('@/manage/Edit')
 const Manage = () => import('@/manage/Manage')
@@ -62,39 +61,34 @@ export default new Router({
       path: '/manage',
       name: 'manage',
       component: Manage,
-      children: [ {
-          path: "/manage/main/article",
-          component: resolve => require(["@/manage/main/ArticleMain"], resolve)
-        },
-        {
-          path: "/manage/main/life",
-          component: resolve => require(["@/manage/main/LifeMain"], resolve)
-        },
-         {
-          path: "/manage/main/permission",
-          component: resolve => require(["@/manage/main/PermissionMain"], resolve)
-        },
-        {
-          path: "/manage/main/home",
-          component: resolve => require(["@/manage/main/HomeMain"], resolve)
-        },
-        {
-          path: "/manage/main/time/task",
-          component: resolve => require(["@/manage/main/TimeTaskMain"], resolve)
-        },
+      children: [{
+        path: "/manage/main/article",
+        component: resolve => require(["@/manage/main/ArticleMain"], resolve)
+      },
+      {
+        path: "/manage/main/life",
+        component: resolve => require(["@/manage/main/LifeMain"], resolve)
+      },
+      {
+        path: "/manage/main/permission",
+        component: resolve => require(["@/manage/main/PermissionMain"], resolve)
+      },
+      {
+        path: "/manage/main/home",
+        component: resolve => require(["@/manage/main/HomeMain"], resolve)
+      },
+      {
+        path: "/manage/main/task",
+        component: resolve => require(["@/manage/main/TimeTaskMain"], resolve)
+      },
       ]
-    },
-    {
-      path: '/manage/add',
-      name: 'add',
-      component: Add,
     },
     // {
     //   path: '/manage/edit',
     //   name: 'edit',
     //   component: Edit,
     // },
-    
+
   ],
-  mode:'history'   //去除#号
+  mode: 'history'   //去除#号
 })

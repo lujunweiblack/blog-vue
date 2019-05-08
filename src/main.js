@@ -28,7 +28,8 @@ import {
   Input,
   MessageBox,
   Loading,
-  Pagination
+  Pagination,
+  Dialog
  } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 //导入store
@@ -64,6 +65,7 @@ Vue.component(FormItem.name, FormItem)
 Vue.component(Input.name, Input)
 Vue.component(MessageBox.name, MessageBox)
 Vue.component(Pagination.name, Pagination)
+Vue.component(Dialog.name, Dialog)
 Vue.config.productionTip = false
 Vue.use(require('vue-wechat-title'))
 /* eslint-disable no-new */

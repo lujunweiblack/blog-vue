@@ -29,7 +29,7 @@
 
 <script >
 import VueMarkdown from "vue-markdown";
-import { formatDate } from "@/common/date.js"; //在组件中引用date.js
+import { formatDate } from "@/common/data.js"; //在组件中引用date.js
 
 export default {
   name: "info",
