@@ -62,23 +62,23 @@ export default new Router({
       name: 'manage',
       component: Manage,
       children: [{
-        path: "/manage/main/article",
+        path: "/manage/article",
         component: resolve => require(["@/manage/main/ArticleMain"], resolve)
       },
       {
-        path: "/manage/main/life",
+        path: "/manage/life",
         component: resolve => require(["@/manage/main/LifeMain"], resolve)
       },
       {
-        path: "/manage/main/permission",
+        path: "/manage/permission",
         component: resolve => require(["@/manage/main/PermissionMain"], resolve)
       },
       {
-        path: "/manage/main/home",
+        path: "/manage/home",
         component: resolve => require(["@/manage/main/HomeMain"], resolve)
       },
       {
-        path: "/manage/main/task",
+        path: "/manage/task",
         component: resolve => require(["@/manage/main/TimeTaskMain"], resolve)
       },
       ]

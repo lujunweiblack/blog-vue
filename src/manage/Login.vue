@@ -101,7 +101,7 @@ export default {
                   menuVo: [],
                   name: "欢迎页面",
                   parentId: "defaultMenu",
-                  path: "/manage/main/home",
+                  path: "/manage/home",
                   type: "menu"
                 }
               ],

@@ -74,7 +74,7 @@ export default {
     this.menuList=JSON.parse(localStorage.getItem("menuList"));
     this.userObj=JSON.parse(localStorage.getItem("userObj"));
     //默认菜单
-    this.$router.push("/manage/main/home");
+    this.$router.push("/manage/home");
   }
 };
 </script>
