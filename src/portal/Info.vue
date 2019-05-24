@@ -62,23 +62,34 @@ export default {
     }).responseText;
     thisObj.defaultData = "preview";
 
-    //后台
-    thisObj
-      .$fetch("/portal/article?articleId=" + thisObj.articleId)
-      .then(response => {
-        if (response.code == 10200) {
-          thisObj.article = response.result[0];
-        } else {
-          thisObj.$message({
-            message: "网络出错，请稍后再戳...",
-            center: true,
-            type: "error",
-            onClose: function() {
-              thisObj.$router.push({ name: "article" });
+    //记录浏览
+    var sn = JSON.parse(JSON.stringify(returnCitySN));
+    this.$post("/portal/browse", {
+      clientIp: sn.cip,
+      clientId: sn.cid,
+      clientName: sn.cname,
+      articleId: thisObj.articleId
+    }).then(response => {
+      if (response.code == "10200") {
+        //后台
+        thisObj
+          .$fetch("/portal/article?articleId=" + thisObj.articleId)
+          .then(response => {
+            if (response.code == 10200) {
+              thisObj.article = response.result[0];
+            } else {
+              thisObj.$message({
+                message: "网络出错，请稍后再戳...",
+                center: true,
+                type: "error",
+                onClose: function() {
+                  thisObj.$router.push({ name: "article" });
+                }
+              });
             }
           });
-        }
-      });
+      }
+    });
   }
 };
 </script>
