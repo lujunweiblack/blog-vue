@@ -24,11 +24,14 @@
     />
     <mavon-editor v-if="this.$store.state.openEdit == true" class="mavon_c" v-model="msg"/>
     <div v-wechat-title="article.articleTitleName"></div>
+    <div id="gitalk-container"></div>
   </div>
 </template>
 
 <script >
 import VueMarkdown from "vue-markdown";
+import 'gitalk/dist/gitalk.css'
+import Gitalk from 'gitalk'
 import { formatDate } from "@/common/data.js"; //在组件中引用date.js
 
 export default {
@@ -90,6 +93,19 @@ export default {
           });
       }
     });
+  },
+  mounted: function() {
+   var articleId =  this.articleId;
+    const gitalk = new Gitalk({
+      clientID: "f4be0445071889777565",
+      clientSecret: "56f8dc9d38f93441866a91ce9364fa5472d9e1f5",
+      repo: "blog-ljw-gitalk",
+      owner: "lujunweiblack",
+      admin: ["lujunweiblack"],
+      id: articleId, // Ensure uniqueness and length less than 50
+      distractionFreeMode: false // Facebook-like distraction free mode
+    });
+    gitalk.render("gitalk-container");
   }
 };
 </script>
@@ -167,5 +183,9 @@ a:hover {
 }
 .mavon_c {
   margin-bottom: 5%;
+}
+
+#gitalk-container{
+  margin-bottom: 100px
 }
 </style>
